@@ -20,8 +20,19 @@ from accounts.views import *
 urlpatterns = [
     path('', LoginView.as_view(),name='login'),
     path('logout/', LogoutView.as_view(),name='logout'),
-    path('home/', LogoutView.as_view(),name='home'),
+    path('home/', HomeView.as_view(),name='home'),
     path('admin/', admin.site.urls),
+
+    #trainer
+    path('trainer_dashboard/', TrainerDashboard.as_view(),name='trainer_dashboard'),
     path('trainer_registration/', TrainerRegistrationView.as_view(),name='trainer_registration'),
-    path('operations_registration/', TrainerRegistrationView.as_view(),name='operations_registration'),
+
+    #operations
+    path('operations_dashboard/', OperationsDashboard.as_view(),name='operations_dashboard'),
+    path('batch_register/', AllBatchView.as_view(),name='batch_register'),
+    path('active_batch_register/', AllActiveBatchView.as_view(),name='active_batch_register'),
+    path('batch_creation_form/', AddBatchView.as_view(),name='batch_creation_form'),
+    path('batch/<id>/',EditBatchView.as_view(),name='batch_edit'),
+    path('upcoming_batch_register/', AllUpcomingBatchView.as_view(),name='upcoming_batch_register'),
+    path('operations_registration/', OperationsRegistrationView.as_view(),name='operations_registration'),
 ]

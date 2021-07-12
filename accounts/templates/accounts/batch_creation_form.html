@@ -1,0 +1,105 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_operations.html' %}
+
+
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                        <h5 class="text-uppercase">Batch Creation Form</h5> 
+                    </div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                        <ul class="list-inline breadcrumb float-right">
+                        <li class="list-inline-item"><a href="{% url 'operations_dashboard' %}">Dashboard</a></li>
+                        <li class="list-inline-item"><a href="#">Batch</a></li>
+                        <li class="list-inline-item">Batch Creation Form</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                <div class="card-box">
+                    <h4 class="card-title">Batch Creation Form</h4>
+                    <br>
+                    <form method="post"action>
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Subject</label>
+                            <div class="col-md-9">
+                                <select class="form-control" name="subject">
+                                    {% for i in c %}
+                                    <option value="{{i}}">{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Trainer</label>
+                            <div class="col-md-9">
+                                <select class="form-control" name="trainer">
+                                    <option value="None">None</option>
+                                    {% for i in t %}
+                                    <option value="{{i.name}}">{{i.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Timing</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name='timing'>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Start Date</label>
+                            <div class="col-md-3">
+                                <input type="date" class="form-control" name='start_date'>
+                            </div>
+                            <label class="col-md-3 col-form-label">End Date</label>
+                            <div class="col-md-3">
+                                <input type="date" class="form-control" name='end_date'>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Type</label>
+                            <div class="col-md-9">
+                            <select class="form-control" name="mod">
+                                <option value="1">Weekday</option>
+                                <option value="2">Weekend</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Status</label>
+                            <div class="col-md-9">
+                                <select class="form-control" name="status">
+                                    <option value="Yet to start">Yet to start</option>
+                                    <option value="Ongoing">Ongoing</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

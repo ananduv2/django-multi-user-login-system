@@ -1,3 +1,36 @@
-<h1>Operations Dashboard</h1>
-<a href="{% url 'operations_registration' %}">Operations Registration</a>
-<a href="{% url 'logout' %}">Logout</a>
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_operations.html' %}
+
+
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+
+            {% include 'accounts/status_main_operations.html' %}
+
+            <div class="row mt-4">
+                
+                <!--  -->
+                <!--  -->
+
+            </div>
+
+
+            <!--  -->
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

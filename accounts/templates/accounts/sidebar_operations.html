@@ -1,0 +1,58 @@
+
+
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="menu-title">Dept. of OPERATIONS</li>
+                <li class="active">
+                    <a href="{% url 'operations_dashboard' %}"><i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard</a>
+                </li>
+                <li class="">
+                    <a href="#"><i class="fas fa-user" aria-hidden="true"></i> <span> Trainers</span> <span
+                            class="menu-arrow"></span></a>
+                    <ul class="list-unstyled" style="display: none;">
+                        <li><a href="all-teachers.html">All Trainers</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="#"><i class="fas fa-user" aria-hidden="true"></i> <span>Batches</span> <span
+                            class="menu-arrow"></span></a>
+                    <ul class="list-unstyled" style="display: none;">
+                        <li><a href="{% url 'batch_creation_form' %}">Add Batch</a></li>
+                        <li><a href="{% url 'active_batch_register' %}">Active Batches</a></li>
+                        <li><a href="{% url 'upcoming_batch_register' %}">Upcoming Batches</a></li>
+                        <li><a href="{% url 'batch_register' %}">All Batches</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="#"><i class="fas fa-user" aria-hidden="true"></i> <span> Students</span> <span
+                            class="menu-arrow"></span></a>
+                    <ul class="list-unstyled" style="display: none;">
+                        <li><a href="all-parents.html">All Students</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="calendar.html" style="width: 80%; display: inline-block;"><i
+                            class="far fa-calendar-alt" aria-hidden="true"></i> Calendar</a>
+                </li>
+                <li>
+                    <a href="exam-list.html"><i class="fas fa-table" aria-hidden="true"></i> Apply for leave</a>
+                </li>
+                <li>
+                    <a href="holidays.html"><i class="fas fa-tasks" aria-hidden="true"></i> Tasks</a>
+                </li>
+                <li>
+                    <a href="calendar.html"><i class="fas fa-table" aria-hidden="true"></i> Events</a>
+                </li>
+                <li>
+                    <a href="calendar.html"><i class="fas fa-table" aria-hidden="true"></i> Notifications</a>
+                </li>
+                
+                        
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -23,6 +23,9 @@ urlpatterns = [
     path('home/', HomeView.as_view(),name='home'),
     path('admin/', admin.site.urls),
 
+    #common paths
+    path('task/',TaskListView.as_view(),name='task'),
+
     #trainer
     path('trainer_dashboard/', TrainerDashboard.as_view(),name='trainer_dashboard'),
     path('trainer_registration/', TrainerRegistrationView.as_view(),name='trainer_registration'),
@@ -36,5 +39,6 @@ urlpatterns = [
     path('batch/delete/<id>/',DeleteBatch.as_view(),name='batch_delete'),
     path('upcoming_batch_register/', AllUpcomingBatchView.as_view(),name='upcoming_batch_register'),
     path('all_trainer_list/',TrainerList.as_view(),name='all_trainer_list'),
+    path('trainer_profile/<id>/',TrainerProfileView.as_view(),name='trainer_profile'),
     path('operations_registration/', OperationsRegistrationView.as_view(),name='operations_registration'),
 ]

@@ -53,11 +53,31 @@ class HomeView(View):
             return redirect('logout')
 
 
+################################################
+###             Common Functions             ###
+################################################
+class TaskListView(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype =="1" or s.stype =="2" or s.stype == "3":
+                ###Common code for trainers
+                task=Task.objects.filter(user=s)
+                return render(request, 'accounts/task_list.html',{'task':task})
+                ###Common code for trainers
+            else:
+                return redirect('logout')
+        else:
+            return redirect('logout')
 
 
 
 
-# Trainer functions
+
+################################################
+###            Trainer Functions             ###
+################################################
 class TrainerDashboard(View):
     def get(self, request):
         user=request.user
@@ -321,6 +341,21 @@ class TrainerList(View):
                 ###Common code for operations
                 t=Staff.objects.filter(stype="3")
                 return render(request,'accounts/all_trainer_list.html',{'t':t})
+                ###Common code for operations
+            else:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class TrainerProfileView(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype == "1":
+                ###Common code for operations
+                t=Staff.objects.get(id=id)
+                return render(request,'accounts/trainer_profile.html',{'t':t})
                 ###Common code for operations
             else:
                 return redirect('home')

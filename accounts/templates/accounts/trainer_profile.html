@@ -1,0 +1,139 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_operations.html' %}
+
+
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="content container-fluid">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                            <h5 class="text-uppercase">{{t.name}}'s Profile</h5>
+                        </div>
+                        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                            <ul class="list-inline breadcrumb float-right">
+                                <li class="list-inline-item"><a href="{% url 'operations_dashboard' %}">Dashboard</a></li>
+                                <li class="list-inline-item">Trainer</li>
+                                <li class="list-inline-item"><a href="{% url 'all_trainer_list' %}">All Trainers</a></li>
+                                <li class="list-inline-item"><a href="#">Trainer Profile</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-box">
+                        <form action="#">
+                            <h4 class="card-title">Personal Information</h4><br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" value="{{t.name}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact</label>
+                                        <input type="text" class="form-control" value="{{t.mobile}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Blood Group</label>
+                                        <select class="select">
+                                            <option>Select</option>
+                                            <option value="1">A+</option>
+                                            <option value="2">O+</option>
+                                            <option value="3">B+</option>
+                                            <option value="4">AB+</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="display-block">Gender:</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="gender_male"
+                                                value="option1">
+                                            <label class="form-check-label" for="gender_male">Male</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="gender_female"
+                                                value="option2">
+                                            <label class="form-check-label" for="gender_female">Female</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" class="form-control" value="{{t.user}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="text" class="form-control" value="{{t.user}}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Repeat Password</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="card-title">postal Address</h4><br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Address Line 1</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address Line 2</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>state</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Country</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>postal Code</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="text-right">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div> -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

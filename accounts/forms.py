@@ -16,4 +16,9 @@ class AddBatchForm(ModelForm):
     class Meta:
         model = Batch
         fields ='__all__'
+
+class TaskAllocationForm(ModelForm):
+    class Meta:
+        model = Task
+        fields ='__all__'
         

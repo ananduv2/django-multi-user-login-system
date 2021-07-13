@@ -51,3 +51,22 @@ class Batch(models.Model):
 
     def __str__(self):
         return "%s %s %s" %(self.trainer , self.subject , self.timing)
+
+class Task(models.Model):
+    status_value= [
+        ('Yet to start', 'Yet to start'),
+        ('In progress', 'In progress'),
+        ('Completed', 'Completed'),
+    ]
+    user = models.ForeignKey(Staff,on_delete=models.CASCADE,null=True)
+    title = models.CharField(max_length=100,null=True)
+    description = models.TextField(max_length=500,null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    assigned_by = models.ForeignKey(Staff,on_delete=models.CASCADE,null=True,related_name='sender')
+    status = models.CharField(max_length=100,choices=status_value,default='Yet to start')
+
+    def __str__(self):
+        return "%s %s" %(self.user , self.title)
+    
+    class Meta:
+        ordering=['created_at','-status']

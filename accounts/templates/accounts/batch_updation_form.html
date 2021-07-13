@@ -39,7 +39,48 @@
                     <br>
                     <form method="post"action>
                         {% csrf_token %}
-                        {{form.as_p}}
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Subject</label>
+                            <div class="col-md-9">
+                                <fieldset class="form-control">{{form.subject}}</fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Trainer</label>
+                            <div class="col-md-9">
+                                <fieldset class="form-control">{{form.trainer}}</fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Timing</label>
+                            <div class="col-md-9">
+                                <fieldset class="form-control">{{form.timing}}</fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Start Date</label>
+                            <div class="col-md-9">
+                                <fieldset class="form-control">{{form.start_date}}</fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">End Date</label>
+                            <div class="col-md-9">
+                                <fieldset class="form-control">{{form.end_date}}</fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Type</label>
+                            <div class="col-md-9">
+                                <fieldset class="form-control">{{form.mode}}</fieldset>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Status</label>
+                            <div class="col-md-9">
+                                <fieldset class="form-control">{{form.status}}</fieldset>
+                            </div>
+                        </div>
                         <div class="text-right">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>

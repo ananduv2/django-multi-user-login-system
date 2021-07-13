@@ -116,8 +116,9 @@ class TrainerRegistrationView(View):
 
 
 
-
-# Operations Functions
+################################################
+###          Operations Functions            ###
+################################################
 class OperationsDashboard(View):
    
     def get(self, request):
@@ -229,7 +230,62 @@ class EditBatchView(View):
                 ###Common code for operations
                 b=Batch.objects.get(id=id)
                 form = AddBatchForm(instance=b)
-                return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form})
+                msg=""
+                return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form,'msg':msg})
+                ###Common code for operations
+            else:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype == "1":
+                ###Common code for operations
+                b=Batch.objects.get(id=id)
+                form = AddBatchForm(request.POST,instance=b)
+                if form.is_valid():
+                    form.save()
+                    s=form.cleaned_data['status']
+                    if s =="Ongoing":
+                        return redirect('active_batch_register')
+                    else :
+                        return redirect('batch_register')
+                msg="Please review your edit."
+                return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form,'msg':msg})
+                ###Common code for operations
+            else:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class DeleteBatch(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype == "1":
+                ###Common code for operations
+                 b=Batch.objects.get(id=id)
+                 msg="Are you sure you want to delete?"
+                 return render(request,'accounts/msg.html',{'b':b,'msg':msg})
+                 ###Common code for operations
+            else:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype == "1":
+                ###Common code for operations
+                b=Batch.objects.get(id=id)
+                b.delete()
+                return redirect('operations_dashboard')
                 ###Common code for operations
             else:
                 return redirect('home')
@@ -249,6 +305,22 @@ class AllUpcomingBatchView(View):
                 b=Batch.objects.filter(status='Yet to start',mode="1")
                 c=Batch.objects.filter(status='Yet to start',mode="2")
                 return render(request,'accounts/all_upcoming_batches.html',{'b':b,'c':c})
+                ###Common code for operations
+            else:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+class TrainerList(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype == "1":
+                ###Common code for operations
+                t=Staff.objects.filter(stype="3")
+                return render(request,'accounts/all_trainer_list.html',{'t':t})
                 ###Common code for operations
             else:
                 return redirect('home')

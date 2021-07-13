@@ -1,0 +1,64 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_operations.html' %}
+
+
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+                    <div class="page-header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                                <h5 class="text-uppercase">Trainers</h5>
+                            </div>
+                            <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                                <ul class="list-inline breadcrumb float-right">
+                                    <li class="list-inline-item"><a href="#">Home</a></li>
+                                    <li class="list-inline-item">Trainer</li>
+                                    <li class="list-inline-item"> All Trainers</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-3">
+                        </div>
+                    </div>
+                    <div class="content-page">
+                        <div class="row staff-grid-row">
+                            {% for i in t %}
+                            <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
+                                <div class="profile-widget">
+                                    <div class="profile-img">
+                                        <a href="profile.html" class="avatar text-white">{{i.name|first}}</a>
+                                    </div>
+                                    <div class="dropdown profile-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                            aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="edit-teacher.html"><i
+                                                    class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i
+                                                    class="fas fa-ban m-r-5"></i> Deactivate</a>
+                                        </div>
+                                    </div>
+                                    <h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">{{i.name|title}}</a></h4>
+                                    <div class="small text-muted">{{i.user}}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

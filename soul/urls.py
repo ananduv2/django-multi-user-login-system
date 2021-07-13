@@ -32,7 +32,9 @@ urlpatterns = [
     path('batch_register/', AllBatchView.as_view(),name='batch_register'),
     path('active_batch_register/', AllActiveBatchView.as_view(),name='active_batch_register'),
     path('batch_creation_form/', AddBatchView.as_view(),name='batch_creation_form'),
-    path('batch/<id>/',EditBatchView.as_view(),name='batch_edit'),
+    path('batch/edit/<id>/',EditBatchView.as_view(),name='batch_edit'),
+    path('batch/delete/<id>/',DeleteBatch.as_view(),name='batch_delete'),
     path('upcoming_batch_register/', AllUpcomingBatchView.as_view(),name='upcoming_batch_register'),
+    path('all_trainer_list/',TrainerList.as_view(),name='all_trainer_list'),
     path('operations_registration/', OperationsRegistrationView.as_view(),name='operations_registration'),
 ]

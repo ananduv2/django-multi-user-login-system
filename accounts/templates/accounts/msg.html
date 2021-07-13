@@ -1,0 +1,53 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_operations.html' %}
+
+
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                        <h5 class="text-uppercase">Delete Batch Data</h5>
+                    </div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                        <ul class="list-inline breadcrumb float-right">
+                        <li class="list-inline-item"><a href="{% url 'operations_dashboard' %}">Dashboard</a></li>
+                        <li class="list-inline-item">Batch</li>
+                        <li class="list-inline-item">Delete Batch Data</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-8" style="background-color: #fff;padding:50px">
+                        <form method="post"  action>
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <h4>{{msg}}</h4>
+                            </div>
+                            <div class="form-group row">
+                                <button class="btn btn-primary btn-sm mb-1" onclick="location.href = document.referrer; return false;" style="margin:10px">Cancel</button>
+                                <button type="submit" class="btn btn-danger btn-sm mb-1" style="margin:10px">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                   
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

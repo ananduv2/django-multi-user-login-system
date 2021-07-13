@@ -126,9 +126,9 @@ class OperationsDashboard(View):
         if user.is_authenticated:
             if s.stype =="1":
                 ###Common code for operations
-                ba=Batch.objects.filter(status=2)
+                ba=Batch.objects.filter(status="Ongoing")
                 ba_count = ba.count()
-                by=Batch.objects.filter(status=1)
+                by=Batch.objects.filter(status="Yet to start")
                 by_count = by.count()
                 return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba})
                 ###Common code for operations
@@ -228,7 +228,8 @@ class EditBatchView(View):
             if s.stype == "1":
                 ###Common code for operations
                 b=Batch.objects.get(id=id)
-                return render(request,'accounts/batch_updation_form.html',{'b':b})
+                form = AddBatchForm(instance=b)
+                return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form})
                 ###Common code for operations
             else:
                 return redirect('home')

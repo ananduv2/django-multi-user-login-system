@@ -16,4 +16,4 @@ class AddBatchForm(ModelForm):
     class Meta:
         model = Batch
         fields ='__all__'
-        exclude=['subject','trainer','mode','status']
+        

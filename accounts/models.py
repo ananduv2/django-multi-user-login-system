@@ -42,7 +42,7 @@ class Batch(models.Model):
         ('Completed', 'Completed'),
     ]
     subject = models.ForeignKey(Courses,on_delete=models.CASCADE,null=True)
-    trainer = models.ForeignKey(Staff,on_delete=models.CASCADE,null=True)
+    trainer = models.ForeignKey(Staff,on_delete=models.CASCADE,null=True,limit_choices_to={'stype':"3"})
     timing = models.CharField(max_length=100, null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)

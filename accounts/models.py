@@ -70,3 +70,54 @@ class Task(models.Model):
     
     class Meta:
         ordering=['created_at','-status']
+
+
+
+class Student(models.Model):
+    state = (
+    ('Andhra Pradesh','Andhra Pradesh'),
+    ('Arunachal Pradesh','Arunachal Pradesh'),
+    ('Assam','Assam'),
+    ('Bihar','Bihar'),
+    ('Chhattisgarh','Chattisgarh'),
+    ('Goa','Goa'),
+    ('Gujarat','Gujarat'),
+    ('Haryana','Haryana'),
+    ('Himachal Pradesh','Himachal Pradesh'),
+    ('Jharkhand','Jharkhand'),
+    ('Karnataka','Karnataka'),
+    ('Kerala','Kerala'),
+    ('Madhya Pradesh','Madhya Pradesh'),
+    ('Maharashtra','Maharashtra'),
+    ('Manipur','Manipur'),
+    ('Meghalaya','Meghalaya'),
+    ('Mizoram','Mizoram'),
+    ('Nagaland','Nagaland'),
+    ('Odisha','Odisha'),
+    ('Rajasthan','Rajasthan'),
+    ('Sikkim','Sikkim'),
+    ('Tamil Nadu','Tamil Nadu'),
+    ('Telangana','Telangana'),
+    ('Tripura','Tripura'),
+    ('Uttar Pradesh','Uttar Pradesh'),
+    ('Uttarakhand','Uttarakhand'),
+    ('West Bengal','West Bengal')
+)
+    user= models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    name = models.CharField(max_length=100)
+    mobile = models.CharField(max_length=10)
+    email = models.EmailField(max_length=200)
+    sex = models.CharField(max_length=10,null=True,choices=(('Male','Male'),('Female','Female')))
+    house = models.CharField(max_length=100,null=True)
+    street =models.CharField(max_length=100,null=True)
+    street2 =models.CharField(max_length=100,null=True)
+    city = models.CharField(max_length=100,null=True)
+    state = models.CharField(max_length=100,null=True,choices=state)
+    course_enrolled = models.CharField(max_length=100,null=True)
+    now_attending = models.CharField(max_length=100,null=True)
+    start_date = models.DateField(null=True)
+    shared = models.BooleanField(default=False,choices=((True, 'Yes'), (False, 'No')))
+    payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half')),default='Half')
+
+    def __str__(self):
+        return self.name

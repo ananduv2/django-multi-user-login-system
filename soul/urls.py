@@ -25,6 +25,9 @@ urlpatterns = [
 
     #common paths
     path('task/',TaskListView.as_view(),name='task'),
+    path('task/<id>/',TaskView.as_view(),name='task_detail'),
+    path('task/update/<id>',TaskUpdate.as_view(),name='task_update'),
+    path('student_register',StudentRegister.as_view(),name='student_register'),
 
     #trainer
     path('trainer_dashboard/', TrainerDashboard.as_view(),name='trainer_dashboard'),

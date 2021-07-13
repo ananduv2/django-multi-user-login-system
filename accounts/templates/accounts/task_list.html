@@ -65,12 +65,10 @@
                                                     <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
                                                         aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#" title="Delete" data-toggle="modal"
-                                                            data-target="#delete_leavetype"><i
-                                                                class="fa fa-eye m-r-5"></i> View</a>
-                                                        <a class="dropdown-item" href="#" title="Edit" data-toggle="modal"
-                                                            data-target="#edit_leavetype"><i
-                                                                class="fas fa-pencil-alt m-r-5"></i> Update</a>
+                                                        <a class="dropdown-item" href="{% url 'task_detail' i.id %}">
+                                                            <i class="fa fa-eye m-r-5"></i> View</a>
+                                                        <a class="dropdown-item" href="{% url 'task_update' i.id %}" >
+                                                            <i class="fas fa-pencil-alt m-r-5"></i> Update</a>
                                                     </div>
                                                 </div>
                                             </td>

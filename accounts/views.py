@@ -61,15 +61,84 @@ class TaskListView(View):
         user=request.user
         if user.is_authenticated:
             s= Staff.objects.get(user=user)
-            if s.stype =="1" or s.stype =="2" or s.stype == "3":
-                ###Common code for trainers
-                task=Task.objects.filter(user=s)
+            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                ###Common code 
+                task=Task.objects.filter(user=s).order_by('-status','created_at')
                 return render(request, 'accounts/task_list.html',{'task':task})
-                ###Common code for trainers
+                ###Common code
             else:
                 return redirect('logout')
         else:
             return redirect('logout')
+
+class TaskView(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype =="1" or s.stype =="2" or s.stype == "3"  or s.stype == "4":
+                ###Common code 
+                task = Task.objects.get(id=id)
+                return render(request,'accounts/task_details.html',{'task':task})
+                ###Common code
+            else:
+                return redirect('logout')
+        else:
+            return redirect('logout')
+
+class TaskUpdate(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                ###Common code 
+                task = Task.objects.get(id=id)
+                return render(request,'accounts/task_update.html',{'task':task})
+                ###Common code
+            else:
+                return redirect('logout')
+        else:
+            return redirect('logout')
+
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                ###Common code 
+                task = Task.objects.get(id=id)
+                ns=request.POST.get('status')
+                if ns == task.status or ns =="None":
+                    return redirect('task')
+                else:
+                    Task.objects.filter(id=id).update(status=ns)
+                    return redirect('task')
+                ###Common code
+            else:
+                return redirect('logout')
+        else:
+            return redirect('logout')
+
+class StudentRegister(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                ###Common code 
+                students=Student.objects.all()
+                return render(request,'accounts/student_register.html',{'students':students})
+                ###Common code
+            else:
+                return redirect('logout')
+        else:
+            return redirect('logout')
+
+                
+
+
+
 
 
 
@@ -401,3 +470,5 @@ class OperationsRegistrationView(View):
                 return redirect('home')
         else:
             return redirect('logout')
+
+

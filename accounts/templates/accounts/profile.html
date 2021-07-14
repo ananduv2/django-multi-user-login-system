@@ -13,7 +13,10 @@
                                 </div>
                                 <div class="col-md-12 col-sm-12 col-12">
                                     <ul class="list-inline float-right">
-                                        <li><button class="btn btn-info " style="border-radius: 80px 80px 80px 80px ;" onclick="window.history.back()"><i class="fas fa-chevron-left"></i>&nbsp;&nbsp;<span style="font-size:18px">Back</span></button></li>
+                                        <li>
+                                            <a href="{% url 'home' %}" class="btn btn-info " style="border-radius: 80px 80px 80px 80px ;color: white">
+                                            <i class="fas fa-home"></i>&nbsp;&nbsp;<span style="font-size:18px">Home</span></a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -34,7 +37,7 @@
                                                         <h3 class="user-name m-t-0">{{s.name}}</h3>
                                                         <h5 class="company-role m-t-0 m-b-0">Dept of {{s.get_stype_display}}</h5>
                                                         <small class="text-muted">{{request.user}}</small>
-                                                        <div class="staff-id"></div>
+                                                        <div class="staff-id">{{s.empid}}</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-7">
@@ -50,15 +53,51 @@
                                                         </li>
                                                         <li>
                                                             <span class="title">Birthday:</span>
-                                                            <span class="text">2nd August</span>
+                                                            <span class="text">{{s.dob}}</span>
                                                         </li>
                                                         <li>
-                                                            <span class="title">Address:</span>
-                                                            <span class="text">5754 Airport Rd, Coosada, AL, 36020</span>
+                                                            <span class="title">Blood Group:</span>
+                                                            <p class="text">{{s.blood_group}}</p>
                                                         </li>
                                                         <li>
                                                             <span class="title">Gender:</span>
-                                                            <span class="text">Male</span>
+                                                            <span class="text">{{s.sex}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Date of joining:</span>
+                                                            <span class="text">{{s.doj}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <ul class="personal-info">
+                                                        <li>
+                                                            <a href="{% url 'home' %}" class="btn btn-info " style="border-radius: 80px 80px 80px 80px ;color: white">
+                                                            <i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;<span style="font-size:18px">Update</span></a>
+                                                        </li> 
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <ul class="personal-info">
+                                                        <li>
+                                                            <span class="title">House:</span>
+                                                            <span class="text">{{s.house}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Assress Line 1:</span>
+                                                            <span class="text">{{s.street}}</span></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Address Line 2:</span>
+                                                            <span class="text">{{s.street2}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">City:</span>
+                                                            <p class="text">{{s.city}}</p>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">State:</span>
+                                                            <span class="text">{{s.state}}</span>
                                                         </li>
                                                     </ul>
                                                 </div>

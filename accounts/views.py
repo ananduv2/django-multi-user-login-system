@@ -22,15 +22,18 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            s = Staff.objects.get(user=user)
-            if s.stype == "1":
-                return redirect('operations_dashboard')
-            elif s.stype =="2":
-                return redirect('sales_dashboard')
-            elif s.stype == "3":
-                return redirect('trainer_dashboard')
-            elif s.stype == "4":
-                return render(request,'accounts/admin_dashboard.html')
+            try:
+                s = Staff.objects.get(user=user)
+                if s.stype == "1":
+                    return redirect('operations_dashboard')
+                elif s.stype =="2":
+                    return redirect('sales_dashboard')
+                elif s.stype == "3":
+                    return redirect('trainer_dashboard')
+                elif s.stype == "4":
+                    return render(request,'accounts/admin_dashboard.html')
+            except:
+                return redirect('student_dashboard')
         msg ="Invalid login.Check your credentials!"
         return render(request,'accounts/login.html',{'msg':msg})
 
@@ -66,6 +69,21 @@ class ProfileView(View):
             if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
                 ###Common code
                 return render(request,'accounts/profile.html',{'s':s})
+                ###Common code
+            else:
+                return redirect('logout')
+        else:
+            return redirect('logout')
+
+
+class ProfileUpdate(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                ###Common code
+                return render(request,'accounts/edit_profile.html',{'s':s})
                 ###Common code
             else:
                 return redirect('logout')
@@ -503,4 +521,39 @@ class OperationsRegistrationView(View):
         else:
             return redirect('logout')
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################
+###            Student Functions             ###
+################################################
+
+class StudentDashboard(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                ###Common code for students
+                return render(request,'students/dashboard.html',{'s':s})
+
+
+                ###Common code for students
+            except:
+                return redirect('logout')
+        return redirect('logout')
 

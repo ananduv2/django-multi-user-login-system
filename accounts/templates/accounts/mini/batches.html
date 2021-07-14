@@ -1,0 +1,50 @@
+<div class="col-lg-6">
+    <div class="content-page">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-title mb-2">
+                    Current-Batch-List
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width:91px;">Subject</th>
+                                <th style="min-width:50px;">Timing</th>
+                                <th style="min-width:50px;">Type</th>
+                                <th style="min-width:50px;">Start Date</th>
+                                <th style="min-width:50px;">End Date</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in ba %}
+                            <tr>
+                                <td>{{i.subject}}</td>
+                                <td>{{i.timing}}</td>
+                                <td>{{i.get_mode_display}}</td>
+                                <td>{{i.start_date}}</td>
+                                <td>{{i.end_date}}</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                            aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="{%url 'batch_edit' i.id %}">
+                                                <i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                                            <a class="dropdown-item" href="{%url 'batch_delete' i.id %}" >
+                                                <i class="fas fa-trash m-r-5"></i>Delete</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+            
+                                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

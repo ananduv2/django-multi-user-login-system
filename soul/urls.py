@@ -32,6 +32,7 @@ urlpatterns = [
     path('task/update/<id>',TaskUpdate.as_view(),name='task_update'),
     path('student_register',StudentRegister.as_view(),name='student_register'),
     path('profile/', ProfileView.as_view(),name='profile'),
+    path('profile/update/', ProfileUpdate.as_view(),name='profile_update'),
 
     #trainer
     path('trainer_dashboard/', TrainerDashboard.as_view(),name='trainer_dashboard'),
@@ -48,6 +49,16 @@ urlpatterns = [
     path('all_trainer_list/',TrainerList.as_view(),name='all_trainer_list'),
     path('trainer_profile/<id>/',TrainerProfileView.as_view(),name='trainer_profile'),
     path('operations_registration/', OperationsRegistrationView.as_view(),name='operations_registration'),
+
+
+
+
+
+
+
+
+    #students
+    path('student/home/',StudentDashboard.as_view(),name='student_dashboard'),
 ]
 
 

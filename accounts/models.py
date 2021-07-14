@@ -14,6 +14,7 @@ class Staff(models.Model):
     mobile = models.CharField(max_length=10,null=True)
     city = models.CharField(max_length=100,null=True)
     stype = models.CharField(max_length=100,null=True,choices=value)
+    profile_pic = models.ImageField(null=True, blank=True,default="user-circle-solid.jpg")
 
     def __str__(self):
         return self.name
@@ -118,6 +119,16 @@ class Student(models.Model):
     start_date = models.DateField(null=True)
     shared = models.BooleanField(default=False,choices=((True, 'Yes'), (False, 'No')))
     payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half')),default='Half')
+    status = models.CharField(max_length=20,choices=(('Active','Active'),('Inactive','Inactive')),default='Active')
 
     def __str__(self):
         return self.name
+
+
+class StudentCourseData(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='student',null=True)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE,related_name='batch')
+    
+    def __str__(self):
+        s=" 's "
+        return "%s %s %s" % (self.student,s, self.batch)

@@ -15,6 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+
+from django.conf.urls.static import static
+from django.conf import settings
 from accounts.views import *
 
 urlpatterns = [
@@ -28,6 +31,7 @@ urlpatterns = [
     path('task/<id>/',TaskView.as_view(),name='task_detail'),
     path('task/update/<id>',TaskUpdate.as_view(),name='task_update'),
     path('student_register',StudentRegister.as_view(),name='student_register'),
+    path('profile/', ProfileView.as_view(),name='profile'),
 
     #trainer
     path('trainer_dashboard/', TrainerDashboard.as_view(),name='trainer_dashboard'),
@@ -45,3 +49,6 @@ urlpatterns = [
     path('trainer_profile/<id>/',TrainerProfileView.as_view(),name='trainer_profile'),
     path('operations_registration/', OperationsRegistrationView.as_view(),name='operations_registration'),
 ]
+
+
+urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

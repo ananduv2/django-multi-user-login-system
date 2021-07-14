@@ -1,0 +1,77 @@
+{% extends 'accounts/main.html' %}
+{% block content %}
+    <div class="main-wrapper">  
+    {% include 'accounts/navbar.html' %}
+
+            <div class="content container" style="padding-top:5%">
+                <!--  Body Content -->
+
+                        <div class="page-header">
+                            <div class="row">
+                                <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                                    <h5 class="text-uppercase">my Profile</h5>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-12">
+                                    <ul class="list-inline float-right">
+                                        <li><button class="btn btn-info " style="border-radius: 80px 80px 80px 80px ;" onclick="window.history.back()"><i class="fas fa-chevron-left"></i>&nbsp;&nbsp;<span style="font-size:18px">Back</span></button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-box m-b-0">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-view">
+                                        <div class="profile-img-wrap">
+                                            <div class="profile-img">
+                                                <img class="avatar" src="{{request.user.staff.profile_pic.url}}" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="profile-basic">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="profile-info-left">
+                                                        <h3 class="user-name m-t-0">{{s.name}}</h3>
+                                                        <h5 class="company-role m-t-0 m-b-0">Dept of {{s.get_stype_display}}</h5>
+                                                        <small class="text-muted">{{request.user}}</small>
+                                                        <div class="staff-id"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <ul class="personal-info">
+                                                        <li>
+                                                            <span class="title">Phone:</span>
+                                                            <span class="text"><a href="">{{s.mobile}}</a></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Email:</span>
+                                                            <span class="text"><a href=""><span class="__cf_email__"
+                                                                        data-cfemail="7d17181b1b180f04100a12131a3d18051c100d1118531e1210">{{request.user}}</span></a></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Birthday:</span>
+                                                            <span class="text">2nd August</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Address:</span>
+                                                            <span class="text">5754 Airport Rd, Coosada, AL, 36020</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Gender:</span>
+                                                            <span class="text">Male</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                <!--  Body Content -->
+            </div>
+
+
+
+{% endblock %}

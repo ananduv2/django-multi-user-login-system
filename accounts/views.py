@@ -56,6 +56,31 @@ class HomeView(View):
 
 
 ################################################
+###        Authenticated User Functions      ###
+################################################
+class ProfileView(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                ###Common code
+                return render(request,'accounts/profile.html',{'s':s})
+                ###Common code
+            else:
+                return redirect('logout')
+        else:
+            return redirect('logout')
+
+
+
+
+
+
+
+
+
+################################################
 ###             Common Functions             ###
 ################################################
 class TaskListView(View):

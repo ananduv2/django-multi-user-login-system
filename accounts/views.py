@@ -3,9 +3,11 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
+from django.db.models import Q
 
 from .models import *
 from .forms import *
+from .filters import *
 # Create your views here.
 
 
@@ -62,9 +64,11 @@ class TaskListView(View):
         if user.is_authenticated:
             s= Staff.objects.get(user=user)
             if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                ###Common code 
+                ###Common code
                 task=Task.objects.filter(user=s).order_by('-status','created_at')
-                return render(request, 'accounts/task_list.html',{'task':task})
+                f=TaskFilter(self.request.GET,queryset=task)
+                task=f.qs
+                return render(request, 'accounts/task_list.html',{'task':task,'f':f})
                 ###Common code
             else:
                 return redirect('logout')
@@ -220,7 +224,10 @@ class OperationsDashboard(View):
                 ba_count = ba.count()
                 by=Batch.objects.filter(status="Yet to start")
                 by_count = by.count()
-                return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba})
+                ta=Task.objects.filter(user=s).filter(~Q(status="Completed"))
+                ta_count = ta.count()
+                students=Student.objects.all()
+                return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba,'ta':ta,'ta_count':ta_count,'students':students})
                 ###Common code for operations
             return redirect('home')
         else:

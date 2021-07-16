@@ -59,6 +59,7 @@ urlpatterns = [
 
     #students
     path('student/home/',StudentDashboard.as_view(),name='student_dashboard'),
+    path('my_courses/',MyCourses.as_view(),name='my_courses'),
 ]
 
 

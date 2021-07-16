@@ -1,0 +1,85 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'students/navbar.html' %}
+
+    {% include 'students/sidebar.html' %}
+
+
+        <div class="page-wrapper">
+            <div class="content container-fluid">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                            <h5 class="text-uppercase">My Courses</h5>
+                        </div>
+                        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                            <ul class="list-inline breadcrumb float-right">
+                                <li class="list-inline-item"><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+                                <li class="list-inline-item">My Courses</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-page">
+                    <div class="row">
+                        <div class="col-sm-8 col-5">
+                            <h4 class="page-title">Active Courses</h4>
+                        </div>
+                        <!-- <div class="col-sm-4 col-7 text-right m-b-30">
+                            <a href="#" class="btn btn-primary btn-rounded float-right" data-toggle="modal"
+                                data-target="#add_leavetype"><i class="fas fa-plus"></i> Add Leave Type</a>
+                        </div> -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped custom-table">
+                                    <thead>
+                                        <tr class="col-12">
+                                            <th class="col-2">Subject</th>
+                                            <th class="col-2">Timing</th>
+                                            <th class="col-2">Trainer</th>
+                                            <th class="col-1">Passcode</th>
+                                            <th class="col-3">Link</th>
+                                            <th class="col-2"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in scd %}
+                                        <tr>
+                                            <td class="col-2">
+                                                <span class="user-img"><img class="rounded-circle" src="{{i.batch.subject.pic.url}}" width="40" height="40">
+                                                    <a href="{{i.batch.link}}">{{i.batch.subject}}</a></span></td>
+                                            <td class="col-2">{{i.batch.timing}}</td>
+                                            <td class="col-2">{{i.batch.trainer}}</td>
+                                            <td class="col-1">{{i.batch.passcode}}</td>
+                                            <td class="col-3">{{i.batch.link}}</td>
+                                            <td class="text-right col-2">
+                                                <p><a href="{{i.batch.link}}" class="btn btn-success " target="_blank" style="border-radius: 80px 80px 80px 80px ;color: white">
+                                                    <span style="font-size:18px">Connect&nbsp;&nbsp;<i class="fas fa-chevron-circle-right"></i></span></a></p>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr><td rowspan="6">No active courses</td></tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

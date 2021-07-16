@@ -1,0 +1,24 @@
+<div class="col-lg-7 col-md-12 col-sm-12 col-12">
+    <h3>Active Courses</h3>
+</div>
+<div class="content-page">
+    <div class="row staff-grid-row">
+        {% for i in scd %}
+        <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
+            <div class="profile-widget">
+                <div class="profile-img">
+                    <a href="hhh" class="avatar text-white">
+                        {% if i.batch.subject.pic %}
+                        <img src="{{i.batch.subject.pic.url}}"></a>
+                        {% else %}
+                        {{i.batch.subject.name|first}}
+                        {% endif %}
+                </div>
+                <h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">{{i.batch.subject.name}}</a></h4>
+                <div class="small text-muted">{{i.batch}}</div>
+            </div>
+        </div>
+        {% endfor %}
+        
+    </div>
+</div>

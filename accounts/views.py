@@ -22,18 +22,7 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            try:
-                s = Staff.objects.get(user=user)
-                if s.stype == "1":
-                    return redirect('operations_dashboard')
-                elif s.stype =="2":
-                    return redirect('sales_dashboard')
-                elif s.stype == "3":
-                    return redirect('trainer_dashboard')
-                elif s.stype == "4":
-                    return render(request,'accounts/admin_dashboard.html')
-            except:
-                return redirect('student_dashboard')
+            return redirect('home')
         msg ="Invalid login.Check your credentials!"
         return render(request,'accounts/login.html',{'msg':msg})
 
@@ -45,15 +34,21 @@ class LogoutView(View):
 class HomeView(View):
     def get(self, request):
         user = request.user
-        s = Staff.objects.get(user=user)
-        if s.stype == "1" :
-            return redirect('operations_dashboard')
-        elif s.stype == "2" :
-            return redirect('sales_dashboard')
-        elif s.stype == "3" :
-            return redirect('trainer_dashboard')
-        elif s.stype == "4" :
-            return redirect('admin_dashboard')
+        if user.is_authenticated:
+            try:
+                s = Staff.objects.get(user=user)
+                if s.stype == "1" :
+                    return redirect('operations_dashboard')
+                elif s.stype == "2" :
+                    return redirect('sales_dashboard')
+                elif s.stype == "3" :
+                    return redirect('trainer_dashboard')
+                elif s.stype == "4" :
+                    return redirect('admin_dashboard')
+                else:
+                    return redirect('logout')
+            except:
+                return redirect('student_dashboard')
         else:
             return redirect('logout')
 
@@ -65,13 +60,16 @@ class ProfileView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                ###Common code
-                return render(request,'accounts/profile.html',{'s':s})
-                ###Common code
-            else:
-                return redirect('logout')
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code
+                    return render(request,'accounts/profile.html',{'s':s})
+                    ###Common code
+                else:
+                    return redirect('logout')
+            except:
+                return redirect('home')
         else:
             return redirect('logout')
 
@@ -80,15 +78,41 @@ class ProfileUpdate(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                ###Common code
-                return render(request,'accounts/edit_profile.html',{'s':s})
-                ###Common code
-            else:
-                return redirect('logout')
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code
+                    form = ProfileUpdateForm(instance=s)
+                    return render(request,'accounts/edit_profile.html',{'s':s,'form':form})
+                    ###Common code
+                else:
+                    return redirect('logout')
+            except:
+                return redirect('home')
         else:
             return redirect('logout')
+
+    def post(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code
+                    form = ProfileUpdateForm(request.POST,instance=s)
+                    if form.is_valid():
+                        form.save()
+                        return redirect('home')
+                    else:
+                        return redirect('profile_update')
+                    ###Common code
+                else:
+                    return redirect('logout')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
 
 
 
@@ -105,16 +129,19 @@ class TaskListView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                ###Common code
-                task=Task.objects.filter(user=s).order_by('-status','created_at')
-                f=TaskFilter(self.request.GET,queryset=task)
-                task=f.qs
-                return render(request, 'accounts/task_list.html',{'task':task,'f':f})
-                ###Common code
-            else:
-                return redirect('logout')
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code
+                    task=Task.objects.filter(user=s).order_by('-status','created_at')
+                    f=TaskFilter(self.request.GET,queryset=task)
+                    task=f.qs
+                    return render(request, 'accounts/task_list.html',{'task':task,'f':f})
+                    ###Common code
+                else:
+                    return redirect('logout')
+            except:
+                return redirect('home')
         else:
             return redirect('logout')
 
@@ -122,14 +149,17 @@ class TaskView(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype =="1" or s.stype =="2" or s.stype == "3"  or s.stype == "4":
-                ###Common code 
-                task = Task.objects.get(id=id)
-                return render(request,'accounts/task_details.html',{'task':task})
-                ###Common code
-            else:
-                return redirect('logout')
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3"  or s.stype == "4":
+                    ###Common code 
+                    task = Task.objects.get(id=id)
+                    return render(request,'accounts/task_details.html',{'task':task})
+                    ###Common code
+                else:
+                    return redirect('logout')
+            except:
+                return redirect('home')
         else:
             return redirect('logout')
 
@@ -137,33 +167,39 @@ class TaskUpdate(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                ###Common code 
-                task = Task.objects.get(id=id)
-                return render(request,'accounts/task_update.html',{'task':task})
-                ###Common code
-            else:
-                return redirect('logout')
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code 
+                    task = Task.objects.get(id=id)
+                    return render(request,'accounts/task_update.html',{'task':task})
+                    ###Common code
+                else:
+                    return redirect('logout')
+            except:
+                return redirect('home')
         else:
             return redirect('logout')
 
     def post(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                ###Common code 
-                task = Task.objects.get(id=id)
-                ns=request.POST.get('status')
-                if ns == task.status or ns =="None":
-                    return redirect('task')
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code 
+                    task = Task.objects.get(id=id)
+                    ns=request.POST.get('status')
+                    if ns == task.status or ns =="None":
+                        return redirect('task')
+                    else:
+                        Task.objects.filter(id=id).update(status=ns)
+                        return redirect('task')
+                    ###Common code
                 else:
-                    Task.objects.filter(id=id).update(status=ns)
-                    return redirect('task')
-                ###Common code
-            else:
-                return redirect('logout')
+                    return redirect('logout')
+            except:
+                return redirect('home')
         else:
             return redirect('logout')
 
@@ -171,14 +207,17 @@ class StudentRegister(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                ###Common code 
-                students=Student.objects.all()
-                return render(request,'accounts/student_register.html',{'students':students})
-                ###Common code
-            else:
-                return redirect('logout')
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code 
+                    students=Student.objects.all()
+                    return render(request,'accounts/student_register.html',{'students':students})
+                    ###Common code
+                else:
+                    return redirect('logout')
+            except:
+                return redirect('home')
         else:
             return redirect('logout')
 
@@ -198,12 +237,15 @@ class TrainerDashboard(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype =="3":
-                ###Common code for trainers
-                return render(request,'accounts/trainer_dashboard.html')
-                ###Common code for trainers
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="3":
+                    ###Common code for trainers
+                    return render(request,'accounts/trainer_dashboard.html')
+                    ###Common code for trainers
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -213,13 +255,16 @@ class TrainerRegistrationView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "3":
-                ###Common code for trainers
-                form =StaffCreationForm()
-                return render(request,'accounts/staff_registration.html',{'form':form})
-                ###Common code for trainers
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    form =StaffCreationForm()
+                    return render(request,'accounts/staff_registration.html',{'form':form})
+                    ###Common code for trainers
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -227,22 +272,26 @@ class TrainerRegistrationView(View):
     def post(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "3":
-                ###Common code for trainers
-                form =StaffCreationForm(request.POST)
-                if form.is_valid():
-                    user = form.save()
-                    name = request.POST.get('name')
-                    mobile = request.POST.get('mobile')
-                    city = request.POST.get('city')
-                    stype=3
-                    s = Staff(user=user, name=name,mobile=mobile, city=city, stype=stype)
-                    s.save()
-                    return HttpResponse("Done")
-                return HttpResponse("Failed")
-                ###Common code for trainers
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    form =StaffCreationForm(request.POST)
+                    if form.is_valid():
+                        user = form.save()
+                        name = request.POST.get('name')
+                        mobile = request.POST.get('mobile')
+                        city = request.POST.get('city')
+                        stype=3
+                        s = Staff(user=user, name=name,mobile=mobile, city=city, stype=stype)
+                        s.save()
+                        return HttpResponse("Done")
+                    else:
+                        return HttpResponse("Failed")
+                    ###Common code for trainers
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -259,20 +308,32 @@ class OperationsDashboard(View):
    
     def get(self, request):
         user=request.user
-        s= Staff.objects.get(user=user)
         if user.is_authenticated:
-            if s.stype =="1":
-                ###Common code for operations
-                ba=Batch.objects.filter(status="Ongoing")
-                ba_count = ba.count()
-                by=Batch.objects.filter(status="Yet to start")
-                by_count = by.count()
-                ta=Task.objects.filter(user=s).filter(~Q(status="Completed"))
-                ta_count = ta.count()
-                students=Student.objects.all()
-                return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba,'ta':ta,'ta_count':ta_count,'students':students})
-                ###Common code for operations
-            return redirect('home')
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1":
+                    ###Common code for operations
+                    ba=Batch.objects.filter(status="Ongoing")
+                    ba_count = ba.count()
+                    by=Batch.objects.filter(status="Yet to start")
+                    by_count = by.count()
+                    ta=Task.objects.filter(user=s).filter(~Q(status="Completed"))
+                    ta_count = ta.count()
+                    students=Student.objects.all()
+                    for i in students:
+                        course_data = StudentCourseData.objects.filter(student=i)
+                        i.course_enrolled=[]
+                        i.now_attending=[]
+                        for j in course_data:
+                            i.course_enrolled.append(j.batch.subject)
+                            if j.batch.status == "Ongoing":
+                                i.now_attending.append(j.batch.subject)
+                        i.save()
+                    return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba,'ta':ta,'ta_count':ta_count,'students':students})
+                    ###Common code for operations
+                return redirect('home')
+            except:
+                return redirect('home')
         else:
             return redirect('logout')
 
@@ -549,11 +610,26 @@ class StudentDashboard(View):
             try:
                 s = Student.objects.get(user=user)
                 ###Common code for students
-                return render(request,'students/dashboard.html',{'s':s})
-
-
+                scd = StudentCourseData.objects.filter(student=s)
+                scd_count = scd.count()
+                c = Courses.objects.all()
+                return render(request,'students/dashboard.html',{'s':s,'scd':scd,'scd_count':scd_count})
                 ###Common code for students
             except:
-                return redirect('logout')
+                return redirect('home')
         return redirect('logout')
 
+
+class MyCourses(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                ###Common code for students
+                scd = StudentCourseData.objects.filter(student=s).filter(batch__status="Ongoing")
+                return render(request,'students/my_courses.html',{'s':s,'scd':scd})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')

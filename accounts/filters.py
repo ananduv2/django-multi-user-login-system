@@ -10,3 +10,4 @@ class TaskFilter(django_filters.FilterSet):
         model = Task
         fields = '__all__'
         exclude =['created_at']
+

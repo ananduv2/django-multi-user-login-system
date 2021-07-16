@@ -79,6 +79,8 @@ class Staff(models.Model):
 class Courses(models.Model):
     name = models.CharField(max_length=300,null=True)
     fee = models.CharField(max_length=6)
+    link = models.CharField(max_length=1000,null=True, blank=True)
+    pic = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -98,11 +100,22 @@ class Batch(models.Model):
     timing = models.CharField(max_length=100, null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
+    link = models.CharField(max_length=1000,null=True,blank=True)
+    passcode = models.CharField(max_length=100,null=True,blank=True,default="N/A")
     mode = models.CharField(max_length=100,choices=mod_value,default=1)
     status = models.CharField(max_length=100,choices=status_value)
 
     def __str__(self):
-        return "%s %s %s" %(self.trainer , self.subject , self.timing)
+        return "%s %s %s %s" %(self.trainer , self.subject , self.start_date , self.timing)
+
+
+class BatchData(models.Model):
+    batch = models.ForeignKey(Batch,on_delete=models.CASCADE,null=True)
+    topic = models.CharField(max_length=100,null=True)
+    link = models.CharField(max_length=1000,null=True, blank=True)
+
+    def __str__(self):
+        return "%s %s" %(self.batch , self.topic)
 
 class Task(models.Model):
     status_value= [

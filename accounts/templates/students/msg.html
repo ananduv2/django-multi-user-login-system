@@ -1,0 +1,50 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'students/navbar.html' %}
+
+    {% include 'students/sidebar.html' %}
+
+
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                        <h5 class="text-uppercase">Alert</h5>
+                    </div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                        <ul class="list-inline breadcrumb float-right">
+                        <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                        <li class="list-inline-item">Alerts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-8" style="background-color: #fff;padding:50px">
+                        <div>
+                            <div class="form-group row">
+                                <h4>{{msg}}</h4>
+                            </div>
+                            <div class="form-group row">
+                                <a href="{% url 'home' %}"class="btn btn-primary btn-sm mb-1" style="margin:10px">OK</a>
+                            </div>
+                        </div>
+                    </div>
+                   
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

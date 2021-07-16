@@ -633,3 +633,54 @@ class MyCourses(View):
             except:
                 return redirect('home')
         return redirect('logout')
+
+class MyCourseList(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                ###Common code for students
+                scd = StudentCourseData.objects.filter(student=s)
+                scd_count = scd.count()
+                c = Courses.objects.all()
+                return render(request,'students/active_course_list.html',{'s':s,'scd':scd,'scd_count':scd_count})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+class VideoList(View):
+    def get(self, request,id): #id of batch is passed as parameter
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                ###Common code for students
+                batch = Batch.objects.get(id=id)
+                batch_data = BatchData.objects.filter(batch=batch)
+                return render(request,'students/video_list.html',{'batch_data':batch_data,'batch':batch})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+class PlayVideo(View):
+    def get(self, request,id): 
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                ###Common code for students
+                batch_data = BatchData.objects.get(id=id)
+                scd = StudentCourseData.objects.get(student=s,batch=batch_data.batch)
+                if scd.payment =="Full":
+                    return render(request,'students/videoplayer.html',{'batch_data':batch_data})
+                else:
+                    msg="Please contact you representative!"
+                    return render(request,'students/msg.html',{'msg':msg})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+

@@ -113,6 +113,7 @@ class BatchData(models.Model):
     batch = models.ForeignKey(Batch,on_delete=models.CASCADE,null=True)
     topic = models.CharField(max_length=100,null=True)
     link = models.CharField(max_length=1000,null=True, blank=True)
+    datecreated = models.DateField(null=True,blank=True,auto_now_add=True)
 
     def __str__(self):
         return "%s %s" %(self.batch , self.topic)
@@ -193,6 +194,7 @@ class Student(models.Model):
 class StudentCourseData(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='student',null=True)
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE,related_name='batch')
+    payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half'),('Not Paid','Not Paid')),default='Not Paid')
     
     def __str__(self):
         s=" 's "

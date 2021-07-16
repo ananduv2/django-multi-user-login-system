@@ -1,0 +1,45 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'students/navbar.html' %}
+
+    {% include 'students/sidebar.html' %}
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                        <h5 class="text-uppercase">Class Video</h5>
+                    </div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                        <ul class="list-inline breadcrumb float-right">
+                            <li class="list-inline-item"><a href="{% url 'student_dashboard' %}">Dashboard</a></li>
+                            <li class="list-inline-item">My Videos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            
+
+
+            <div id="divContainer" style="position: absolute; left: 30px; top: 150px; border: solid 5px rgb(24, 98, 236);border-radius: 15px 15px 15px 15px;">
+                <div id="frameContainer" style="overflow:hidden;">
+                    <iframe src="{{batch_data.link}}" scrolling="yes" style="width: 790px; height: 500px; margin-top: -0px;border-radius: 15px 15px 15px 15px;">
+                    </iframe>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

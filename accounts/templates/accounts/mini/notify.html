@@ -1,0 +1,42 @@
+<li class="nav-item dropdown d-none d-sm-block">
+    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fas fa-bell"></i>
+        <span class="badge badge-pill bg-primary float-right">{{no_count}}</span></a>
+    <div class="dropdown-menu notifications">
+        <div class="topnav-dropdown-header">
+            <span>Notifications</span>
+        </div>
+        <div class="drop-scroll">
+            <ul class="notification-list">
+                
+                
+                {% for i in note %}
+                <li class="notification-message">
+                    <a href="">
+                        <div class="media">
+                            <!-- <span class="avatar">
+                                <img alt="John Doe" src="assets/img/user.jpg"
+                                    class="img-fluid rounded-circle">
+                            </span> -->
+                            <div class="media-body">
+                                <p class="noti-details"><span class="noti-title">{{i.sender}}</span> send
+                                   {{i.content}} : {{i.subject}}</p>
+                                <p class="noti-time"><span class="notification-time">{{i.datetime}}</span>
+                                    
+                                </p>
+                                
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                {% endfor %}
+                
+
+
+
+            </ul>
+        </div>
+        <div class="topnav-dropdown-footer">
+            <a href="{% url 'mark_as_read' %}">Mark all as read</a>
+        </div>
+    </div>
+</li>

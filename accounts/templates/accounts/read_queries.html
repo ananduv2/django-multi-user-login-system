@@ -1,0 +1,85 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_operations.html' %}
+
+
+        <div class="page-wrapper">
+            <div class="content container-fluid">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                            <h5 class="text-uppercase">Query List</h5>
+                        </div>
+                        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                            <ul class="list-inline breadcrumb float-right">
+                                <li class="list-inline-item"><a href="{% url 'operations_dashboard' %}">Dashboard</a></li>
+                                <li class="list-inline-item">Query List</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-page">
+                    <div class="row">
+                        <div class="col-sm-8 col-5">
+                            <h4 class="page-title">Queries</h4>
+                        </div>
+                        <!-- <div class="col-sm-4 col-7 text-right m-b-30">
+                            <a href="#" class="btn btn-primary btn-rounded float-right" data-toggle="modal"
+                                data-target="#add_leavetype"><i class="fas fa-plus"></i> Add Leave Type</a>
+                        </div> -->
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sender</th>
+                                            <th>Subject</th>
+                                            <th>Message</th>
+                                            <th>Date</th>
+                                            <th class="text-right">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in q %}
+                                        <tr>
+                                            <td>{{i.sender}}</td>
+                                            <td>{{i.subject}}</td>
+                                            <td>{{i.message}}</td>
+                                            <td>{{i.datetime}}</td>
+                                            <td class="text-right">
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                                        aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="{% url 'reply_query' i.id %}" >
+                                                            <i class="fas fa-pencil-alt m-r-5"></i> Reply</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

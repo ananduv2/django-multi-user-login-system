@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 from django.db.models import Q
 
+
 from .models import *
 from .forms import *
 from .filters import *
@@ -115,8 +116,22 @@ class ProfileUpdate(View):
 
 
 
-
-
+class MarkAsRead(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                ###Common code
+                n= Notification.objects.filter(receiver=user)
+                for i in n:
+                    i.status = "Read"
+                    i.save()
+                return redirect('home')
+                ###Common code
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
 
 
 
@@ -215,6 +230,15 @@ class StudentRegister(View):
                 if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
                     ###Common code 
                     students=Student.objects.all()
+                    for i in students:
+                        course_data = StudentCourseData.objects.filter(student=i)
+                        i.course_enrolled=[]
+                        i.now_attending=[]
+                        for j in course_data:
+                            i.course_enrolled.append(j.batch.subject)
+                            if j.batch.status == "Ongoing":
+                                i.now_attending.append(j.batch.subject)
+                        i.save()
                     return render(request,'accounts/student_register.html',{'students':students})
                     ###Common code
                 else:
@@ -323,6 +347,9 @@ class OperationsDashboard(View):
                     ta=Task.objects.filter(user=s).filter(~Q(status="Completed"))
                     ta_count = ta.count()
                     students=Student.objects.all()
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    print(no_count)
                     for i in students:
                         course_data = StudentCourseData.objects.filter(student=i)
                         i.course_enrolled=[]
@@ -332,7 +359,7 @@ class OperationsDashboard(View):
                             if j.batch.status == "Ongoing":
                                 i.now_attending.append(j.batch.subject)
                         i.save()
-                    return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba,'ta':ta,'ta_count':ta_count,'students':students})
+                    return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba,'ta':ta,'ta_count':ta_count,'students':students,'no_count':no_count,'note':note})
                     ###Common code for operations
                 return redirect('home')
             except:
@@ -585,7 +612,57 @@ class OperationsRegistrationView(View):
         else:
             return redirect('logout')
 
+class QueryList(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype == "1":
+                ###Common code for operations
+                q=Query.objects.filter(receiver=s).filter(status="Not replied")
+                return render(request,'accounts/read_queries.html',{'q':q})
+                ###Common code for operations
+            else:
+                return redirect('home')
+        else:
+            return redirect('logout')
 
+
+class ReplyQuery(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype == "1":
+                ###Common code for operations
+                q=Query.objects.get(id=id)
+                form = QuerySendForm(instance=q)
+                return render(request,'accounts/reply_query.html',{'form':form})
+                ###Common code for operations
+            else:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            s= Staff.objects.get(user=user)
+            if s.stype == "1":
+                ###Common code for operations
+                q=Query.objects.get(id=id)
+                q.reply=request.POST.get('reply')
+                q.status="Replied"
+                q.save()
+                re = q.sender.user
+                n = Notification(sender=user,receiver=re,content="Re : Query",subject=q.subject)
+                n.save()
+                return redirect('query_list')
+                ###Common code for operations
+            else:
+                return redirect('home')
+        else:
+            return redirect('logout')
 
 
 
@@ -612,11 +689,15 @@ class StudentDashboard(View):
         if user.is_authenticated:
             try:
                 s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
                 ###Common code for students
                 scd = StudentCourseData.objects.filter(student=s)
                 scd_count = scd.count()
                 c = Courses.objects.all()
-                return render(request,'students/dashboard.html',{'s':s,'scd':scd,'scd_count':scd_count})
+                q=Query.objects.filter(sender=s,status="Not replied")
+                q_count = q.count()
+                return render(request,'students/dashboard.html',{'s':s,'scd':scd,'scd_count':scd_count,'q_count':q_count,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
                 return redirect('home')
@@ -714,6 +795,12 @@ class SendQuery(View):
                     f=form.save(commit=False)
                     f.sender=s
                     f.save()
+                    receiver=form.cleaned_data['receiver']
+                    subject=form.cleaned_data['subject']
+                    r=Staff.objects.get(name=receiver)
+                    re=r.user
+                    n = Notification(sender=user,receiver=re,content="Query",subject=subject)
+                    n.save()
                     msg="Issue Raised"
                     return render(request,'students/msg.html',{'msg':msg})
                 else:
@@ -723,4 +810,7 @@ class SendQuery(View):
             except:
                 return redirect('home')
         return redirect('logout')
+
+
+
 

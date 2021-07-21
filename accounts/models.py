@@ -213,3 +213,15 @@ class Query(models.Model):
 
     def __str__(self):
         return "%s %s" % (self.sender,self.subject)
+
+
+class Notification(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE,related_name='sender',null=True,blank=True)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE,related_name='receiver',null=True,blank=True)
+    content = models.CharField(max_length=100,null=True)
+    subject = models.CharField(max_length=400,null=True)
+    datetime = models.DateTimeField(auto_now_add=True, null=True)
+    status = models.CharField(max_length=100,null=True,choices=(('Read','Read'),('Not Read','Not Read')),default="Not Read")
+
+    def __str__(self):
+        return "%s %s" % (self.receiver,self.subject)

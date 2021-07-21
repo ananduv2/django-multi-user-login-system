@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+import notifications.urls
+from django.conf.urls import url,include
 from django.conf.urls.static import static
 from django.conf import settings
 from accounts.views import *
@@ -25,6 +26,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(),name='logout'),
     path('home/', HomeView.as_view(),name='home'),
     path('admin/', admin.site.urls),
+    path('mark_as_read/', MarkAsRead.as_view(),name='mark_as_read'),
 
     #common paths
     path('task/',TaskListView.as_view(),name='task'),
@@ -49,6 +51,8 @@ urlpatterns = [
     path('all_trainer_list/',TrainerList.as_view(),name='all_trainer_list'),
     path('trainer_profile/<id>/',TrainerProfileView.as_view(),name='trainer_profile'),
     path('operations_registration/', OperationsRegistrationView.as_view(),name='operations_registration'),
+    path('query_list/', QueryList.as_view(),name='query_list'),
+    path('reply_query/<id>/', ReplyQuery.as_view(),name='reply_query'),
 
 
 

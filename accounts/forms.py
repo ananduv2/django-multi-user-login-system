@@ -27,4 +27,11 @@ class ProfileUpdateForm(ModelForm):
         model = Staff
         fields ='__all__'
         exclude = ['user','name','empid','email','sex','dob','doj','status','stype','profile_pic']
+
+class QuerySendForm(ModelForm):
+    class Meta:
+        model = Query
+        fields = ['sender','receiver','subject','message']
+        
+
         

@@ -122,6 +122,9 @@ class ProfileUpdate(View):
 
 
 
+
+
+
 ################################################
 ###             Common Functions             ###
 ################################################
@@ -678,6 +681,43 @@ class PlayVideo(View):
                     return render(request,'students/videoplayer.html',{'batch_data':batch_data})
                 else:
                     msg="Please contact you representative!"
+                    return render(request,'students/msg.html',{'msg':msg})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+class SendQuery(View):
+    def get(self, request): 
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                ###Common code for students
+                form = QuerySendForm()
+                st=Staff.objects.filter(stype="1")
+                return render(request,'students/send_query.html',{'s':s,'form':form,'st':st})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+
+    def post(self, request): 
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                ###Common code for students
+                form = QuerySendForm(request.POST)
+                if form.is_valid():
+                    f=form.save(commit=False)
+                    f.sender=s
+                    f.save()
+                    msg="Issue Raised"
+                    return render(request,'students/msg.html',{'msg':msg})
+                else:
+                    msg="Failed to raise issue. Try again and mention all fields."
                     return render(request,'students/msg.html',{'msg':msg})
                 ###Common code for students
             except:

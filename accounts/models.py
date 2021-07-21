@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 # Create your models here.
 class Staff(models.Model):
@@ -199,3 +200,16 @@ class StudentCourseData(models.Model):
     def __str__(self):
         s=" 's "
         return "%s %s %s" % (self.student,s, self.batch)
+
+
+class Query(models.Model):
+    sender = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='sender',null=True,blank=True)
+    receiver = models.ForeignKey(Staff,on_delete=models.CASCADE,related_name='receiver',null=True,limit_choices_to={'stype':"1"})
+    subject = models.CharField(max_length=400,null=True)
+    message = models.TextField(max_length=1500,null=True)
+    reply = models.TextField(max_length=1500, null=True, blank=True)
+    datetime = models.DateField(default=datetime.datetime.now(),null=True, blank=True)
+    status = models.CharField(max_length=100,choices=(('Not replied','Not replied'),('Replied','Replied')),default='Not replied',blank=True)
+
+    def __str__(self):
+        return "%s %s" % (self.sender,self.subject)

@@ -5,7 +5,7 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Dept. of OPERATIONS</li>
-                        <li class="active">
+                        <li>
                             <a href="{% url 'student_dashboard' %}"><i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard</a>
                         </li>
                         <li>
@@ -29,7 +29,7 @@
                             <a href="#"><i class="fas fa-exclamation-triangle"></i> <span>Raise Issue</span> <span
                                     class="menu-arrow"></span></a>
                             <ul class="list-unstyled" style="display: none;">
-                                <li><a href="">Raise Query</a></li>
+                                <li><a href="{% url 'send_query' %}">Raise Query</a></li>
                                 <li><a href="">Responses</a></li>
                             </ul>
                         </li>

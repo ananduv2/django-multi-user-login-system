@@ -62,7 +62,8 @@ urlpatterns = [
     path('my_courses/',MyCourses.as_view(),name='my_courses'),
     path('my_active_courses/',MyCourseList.as_view(),name='my_active_courses'),
     path('my_video_list/<id>/',VideoList.as_view(),name='my_video_list'),
-    path('videoplayer/<id>',PlayVideo.as_view(),name='videoplayer')
+    path('videoplayer/<id>',PlayVideo.as_view(),name='videoplayer'),
+    path('send_query/',SendQuery.as_view(),name='send_query'),
 ]
 
 

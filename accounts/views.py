@@ -479,6 +479,7 @@ class EditBatchView(View):
                 if form.is_valid():
                     form.save()
                     s=form.cleaned_data['status']
+
                     if s =="Ongoing":
                         return redirect('active_batch_register')
                     else :
@@ -710,9 +711,11 @@ class MyCourses(View):
         if user.is_authenticated:
             try:
                 s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
                 ###Common code for students
                 scd = StudentCourseData.objects.filter(student=s).filter(batch__status="Ongoing")
-                return render(request,'students/my_courses.html',{'s':s,'scd':scd})
+                return render(request,'students/my_courses.html',{'s':s,'scd':scd,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
                 return redirect('home')
@@ -724,11 +727,13 @@ class MyCourseList(View):
         if user.is_authenticated:
             try:
                 s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
                 ###Common code for students
-                scd = StudentCourseData.objects.filter(student=s)
+                scd = StudentCourseData.objects.filter(student=s).filter(~Q(batch__status="Yet to start"))
                 scd_count = scd.count()
                 c = Courses.objects.all()
-                return render(request,'students/active_course_list.html',{'s':s,'scd':scd,'scd_count':scd_count})
+                return render(request,'students/active_course_list.html',{'s':s,'scd':scd,'scd_count':scd_count,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
                 return redirect('home')
@@ -740,10 +745,12 @@ class VideoList(View):
         if user.is_authenticated:
             try:
                 s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
                 ###Common code for students
                 batch = Batch.objects.get(id=id)
                 batch_data = BatchData.objects.filter(batch=batch)
-                return render(request,'students/video_list.html',{'batch_data':batch_data,'batch':batch})
+                return render(request,'students/video_list.html',{'batch_data':batch_data,'batch':batch,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
                 return redirect('home')
@@ -755,11 +762,13 @@ class PlayVideo(View):
         if user.is_authenticated:
             try:
                 s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
                 ###Common code for students
                 batch_data = BatchData.objects.get(id=id)
                 scd = StudentCourseData.objects.get(student=s,batch=batch_data.batch)
                 if scd.payment =="Full":
-                    return render(request,'students/videoplayer.html',{'batch_data':batch_data})
+                    return render(request,'students/videoplayer.html',{'batch_data':batch_data,'no_count':no_count,'note':note})
                 else:
                     msg="Please contact you representative!"
                     return render(request,'students/msg.html',{'msg':msg})
@@ -774,10 +783,12 @@ class SendQuery(View):
         if user.is_authenticated:
             try:
                 s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
                 ###Common code for students
                 form = QuerySendForm()
                 st=Staff.objects.filter(stype="1")
-                return render(request,'students/send_query.html',{'s':s,'form':form,'st':st})
+                return render(request,'students/send_query.html',{'s':s,'form':form,'st':st,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
                 return redirect('home')
@@ -789,6 +800,8 @@ class SendQuery(View):
         if user.is_authenticated:
             try:
                 s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
                 ###Common code for students
                 form = QuerySendForm(request.POST)
                 if form.is_valid():
@@ -802,10 +815,10 @@ class SendQuery(View):
                     n = Notification(sender=user,receiver=re,content="Query",subject=subject)
                     n.save()
                     msg="Issue Raised"
-                    return render(request,'students/msg.html',{'msg':msg})
+                    return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
                 else:
                     msg="Failed to raise issue. Try again and mention all fields."
-                    return render(request,'students/msg.html',{'msg':msg})
+                    return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
                 return redirect('home')

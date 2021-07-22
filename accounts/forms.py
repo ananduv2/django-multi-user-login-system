@@ -28,6 +28,11 @@ class ProfileUpdateForm(ModelForm):
         fields ='__all__'
         exclude = ['user','name','empid','email','sex','dob','doj','status','stype','profile_pic']
 
+class ProfilePicChange(ModelForm):
+    class Meta:
+        model = Staff
+        fields = ['profile_pic']
+
 class QuerySendForm(ModelForm):
     class Meta:
         model = Query

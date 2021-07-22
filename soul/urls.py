@@ -35,6 +35,7 @@ urlpatterns = [
     path('student_register',StudentRegister.as_view(),name='student_register'),
     path('profile/', ProfileView.as_view(),name='profile'),
     path('profile/update/', ProfileUpdate.as_view(),name='profile_update'),
+    path('profile/update/pic/', ProfilePicUpdate.as_view(),name='profile_pic_update'),
 
     #trainer
     path('trainer_dashboard/', TrainerDashboard.as_view(),name='trainer_dashboard'),

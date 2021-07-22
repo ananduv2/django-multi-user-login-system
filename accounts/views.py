@@ -248,6 +248,45 @@ class StudentRegister(View):
         else:
             return redirect('logout')
 
+class ProfilePicUpdate(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code 
+                    form = ProfilePicChange(instance=s)
+                    return render(request,'accounts/profile_pic_update.html',{'form':form,'s':s})
+                    ###Common code
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    ###Common code 
+                    form = ProfilePicChange(request.POST,request.FILES,instance=s)
+                    if form.is_valid():
+                        form.save()
+                        return redirect('home')
+                    else:
+                        msg ="Failed to update profile picture"
+                        return render(request,'accounts/msg.html',{'msg':msg,'s':s})
+                    ###Common code
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
                 
 
 

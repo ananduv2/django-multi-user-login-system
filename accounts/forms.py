@@ -32,6 +32,9 @@ class ProfilePicChange(ModelForm):
     class Meta:
         model = Staff
         fields = ['profile_pic']
+        widgets = {
+            'profile_pic': forms.FileInput(),
+        }
 
 class QuerySendForm(ModelForm):
     class Meta:

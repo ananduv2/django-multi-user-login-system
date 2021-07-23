@@ -59,7 +59,7 @@
                                             <td>{{i.subject}}</td>
                                             <td>{{i.message|slice:":40"}}...</td>
                                             <td>{{i.reply|slice:":40"}}...</td>
-                                            
+                                            {% if i.status == "Replied" %}
                                             <td class="text-right">
                                                 <div class="dropdown dropdown-action">
                                                     <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
@@ -70,6 +70,9 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            {% else %}
+                                            <td class="text-right">N/A</td>
+                                            {% endif %}
                                         </tr>
                                         {% endfor %}
                                         

@@ -310,39 +310,43 @@ class ProfilePicUpdate(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                    ###Common code 
-                    form = ProfilePicChange(instance=s)
-                    return render(request,'accounts/profile_pic_update.html',{'form':form,'s':s})
-                    ###Common code
-                else:
-                    return redirect('home')
+                form = ProfilePicChange(instance=s)
+                return render(request,'accounts/profile_pic_update.html',{'form':form,'s':s,'no_count':no_count,'note':note})
             except:
-                return redirect('home')
+                s= Student.objects.get(user=user)
+                form = StudentProfilePicChange(instance=s)
+                return render(request,'students/profile_pic_update.html',{'form':form,'s':s,'no_count':no_count,'note':note})
         else:
             return redirect('logout')
 
     def post(self, request):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
-                s= Staff.objects.get(user=user)
-                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                    ###Common code 
-                    form = ProfilePicChange(request.POST,request.FILES,instance=s)
-                    if form.is_valid():
-                        form.save()
-                        return redirect('home')
-                    else:
-                        msg ="Failed to update profile picture"
-                        return render(request,'accounts/msg.html',{'msg':msg,'s':s})
-                    ###Common code
-                else:
+                s= Staff.objects.get(user=user) 
+                form = ProfilePicChange(request.POST,request.FILES,instance=s)
+                if form.is_valid():
+                    form.save()
                     return redirect('home')
+                else:
+                    msg ="Failed to update profile picture"
+                    return render(request,'accounts/okmsg.html',{'msg':msg,'s':s,'no_count':no_count,'note':note})
+                
             except:
-                return redirect('home')
+                s= Student.objects.get(user=user) 
+                form = StudentProfilePicChange(request.POST,request.FILES,instance=s)
+                if form.is_valid():
+                    form.save()
+                    return redirect('home')
+                else:
+                    msg ="Failed to update profile picture"
+                    return render(request,'students/msg.html',{'msg':msg,'s':s,'no_count':no_count,'note':note})
         else:
             return redirect('logout')
                 

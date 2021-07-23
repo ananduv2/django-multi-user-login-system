@@ -1,0 +1,121 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'students/navbar.html' %}
+
+    {% include 'students/sidebar.html' %}
+
+
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                        <h5 class="text-uppercase">Queries</h5> 
+                    </div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                        <ul class="list-inline breadcrumb float-right">
+                        <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                        <li class="list-inline-item"><a href="{% url 'view_doubt_reply' %}">Queries</a></li>
+                        <li class="list-inline-item">Solution</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                <div class="card-box">
+                    <h4 class="card-title">Solution</h4>
+                    <br>
+                    <form method="post"action>
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Sender</label>
+                            <div class="col-md-9">
+                                {% load widget_tweaks %}
+                                {% render_field form.receiver class="form-control" disabled="True" %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Subject</label>
+                            <div class="col-md-9">
+                                
+                                {% render_field form.subject class="form-control" disabled="True" %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Message</label>
+                            <div class="col-md-9">
+                                {% render_field form.message class="form-control" disabled="True" %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Image 1</label>
+                            <div class="col-md-9">
+                                {% if d.ss1 %}
+                                <img src="{{d.ss1.url}}" class="img-responsive">
+                                {% else %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Error!</strong>
+                                    "No image was attached."
+                                    <button type="button" class="close" data-dismiss="alert" area-label="Close">
+                                        <span area-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Image 2</label>
+                            <div class="col-md-9">
+                                {% if d.ss2 %}
+                                <img src="{{d.ss2.url}}" class="img-responsive">
+                                {% else %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Error!</strong>
+                                    "No image was attached."
+                                    <button type="button" class="close" data-dismiss="alert" area-label="Close">
+                                        <span area-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Image 3</label>
+                            <div class="col-md-9">
+                                {% if d.ss3 %}
+                                <img src="{{d.ss3.url}}" class="img-responsive">
+                                {% else %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Error!</strong>
+                                    "No image was attached."
+                                    <button type="button" class="close" data-dismiss="alert" area-label="Close">
+                                        <span area-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Reply</label>
+                            <div class="col-md-9">
+                                {% render_field form.reply class="form-control" disabled="True" %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

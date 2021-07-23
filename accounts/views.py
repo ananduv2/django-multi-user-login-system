@@ -112,16 +112,14 @@ class ProfileView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                    ###Common code
-                    return render(request,'accounts/profile.html',{'s':s})
-                    ###Common code
-                else:
-                    return redirect('logout')
+                return render(request,'accounts/profile.html',{'s':s,'no_count':no_count,'note':note})
             except:
-                return redirect('home')
+                s= Student.objects.get(user=user)
+                return render(request,'students/profile.html',{'s':s,'no_count':no_count,'note':note})
         else:
             return redirect('logout')
 
@@ -952,12 +950,14 @@ class StudentDashboard(View):
                 note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
                 no_count = note.count()
                 ###Common code for students
-                scd = StudentCourseData.objects.filter(student=s)
+                scd = StudentCourseData.objects.filter(student=s).filter(~Q(batch__status="Yet to start"))
                 scd_count = scd.count()
                 c = Courses.objects.all()
                 q=Query.objects.filter(sender=s,status="Not replied")
                 q_count = q.count()
-                return render(request,'students/dashboard.html',{'s':s,'scd':scd,'scd_count':scd_count,'q_count':q_count,'no_count':no_count,'note':note})
+                d=Doubt.objects.filter(sender=s,status="Not replied")
+                d_count = d.count()
+                return render(request,'students/dashboard.html',{'s':s,'scd':scd,'scd_count':scd_count,'q_count':q_count,'no_count':no_count,'note':note,'d_count':d_count})
                 ###Common code for students
             except:
                 return redirect('home')
@@ -1071,7 +1071,7 @@ class SendQuery(View):
                     subject=form.cleaned_data['subject']
                     r=Staff.objects.get(name=receiver)
                     re=r.user
-                    n = Notification(sender=user,receiver=re,content="Query",subject=subject)
+                    n = Notification(sender=user,receiver=re,content="Issue",subject=subject)
                     n.save()
                     msg="Issue Raised"
                     return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
@@ -1093,7 +1093,7 @@ class ViewQueryReply(View):
                 note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
                 no_count = note.count()
                 ###Common code for students
-                q= Query.objects.filter(sender=s).order_by('-modified')
+                q= Query.objects.filter(sender=s).order_by('-datetime')
                 return render(request,'students/responses.html',{'s':s,'no_count':no_count,'note':note,'q':q})
                 ###Common code for students
             except:
@@ -1117,6 +1117,86 @@ class ViewQReply(View):
                 return redirect('home')
         return redirect('logout')
 
+
+
+class SendDoubt(View):
+    def get(self, request): 
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                form = DoubtSendForm()
+                st=Staff.objects.filter(stype="3")
+                return render(request,'students/send_doubt.html',{'s':s,'form':form,'st':st,'no_count':no_count,'note':note})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+    def post(self, request): 
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                form = DoubtSendForm(request.POST,request.FILES)
+                if form.is_valid():
+                    f=form.save(commit=False)
+                    f.sender=s
+                    f.save()
+                    receiver=form.cleaned_data['receiver']
+                    subject=form.cleaned_data['subject']
+                    r=Staff.objects.get(name=receiver)
+                    re=r.user
+                    n = Notification(sender=user,receiver=re,content="Doubt",subject=subject)
+                    n.save()
+                    msg="Doubt send.Your trainer will get back to you soon."
+                    return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
+                else:
+                    msg="Failed to send doubt. Try again or report it as Issue."
+                    return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+class ViewDoubtReply(View):
+    def get(self, request): 
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                d= Doubt.objects.filter(sender=s).order_by('-datetime')
+                return render(request,'students/dresponses.html',{'s':s,'no_count':no_count,'note':note,'d':d})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+class ViewDReply(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                d=Doubt.objects.get(id=id)
+                form = DoubtSendForm(instance=d)
+                return render(request,'students/dreply.html',{'s':s,'no_count':no_count,'note':note,'form':form,'d':d})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
 
 
 

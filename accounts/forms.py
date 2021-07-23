@@ -41,6 +41,11 @@ class QuerySendForm(ModelForm):
     class Meta:
         model = Query
         fields = ['sender','receiver','subject','message','reply','datetime']
+
+class DoubtSendForm(ModelForm):
+    class Meta:
+        model = Doubt
+        fields = '__all__'
         
 
         

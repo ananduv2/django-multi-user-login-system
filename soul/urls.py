@@ -76,6 +76,9 @@ urlpatterns = [
     path('send_query/',SendQuery.as_view(),name='send_query'),
     path('view_query_reply/',ViewQueryReply.as_view(),name='view_query_reply'),
     path('view_reply/<id>/',ViewQReply.as_view(),name='view_reply'),
+    path('send_doubt/',SendDoubt.as_view(),name='send_doubt'),
+    path('view_doubt_reply/',ViewDoubtReply.as_view(),name='view_doubt_reply'),
+    path('view_dreply/<id>/',ViewDReply.as_view(),name='view_dreply'),
 ]
 
 

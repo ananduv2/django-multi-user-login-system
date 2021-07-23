@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 
@@ -33,6 +35,53 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('/')
+
+
+class PasswordChangeView(View):
+    def get(self, request):
+        user = request.user
+        if user.is_authenticated: 
+            form = PasswordChangeForm(user=user)
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s = Staff.objects.get(user=user)
+                return render(request,'accounts/password_change.html',{'s':s,'no_count':no_count,'note':note,'form':form})
+            except:
+                s = Student.objects.get(user=user)
+                return render(request,'students/password_change.html',{'s':s,'no_count':no_count,'note':note,'form':form})
+        else:
+            return redirect('logout')  
+
+    def post(self, request):
+        user = request.user
+        
+        form = PasswordChangeForm(user=user, data=request.POST)
+        note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+        no_count = note.count()
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            msg="Password Updated successfully"
+            try:
+                s = Staff.objects.get(user=user)
+                return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+            except:
+                s = Student.objects.get(user=user)
+                return render(request,'students/msg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+        else:
+            msg="Password Updation failed"
+            try:
+                s = Staff.objects.get(user=user)
+                return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+            except:
+                s = Student.objects.get(user=user)
+                return render(request,'students/msg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+        
+
+        
+
+
 
 class HomeView(View):
     def get(self, request):

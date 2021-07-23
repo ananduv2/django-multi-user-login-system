@@ -27,6 +27,7 @@ urlpatterns = [
     path('home/', HomeView.as_view(),name='home'),
     path('admin/', admin.site.urls),
     path('mark_as_read/', MarkAsRead.as_view(),name='mark_as_read'),
+    path('accounts/password_change/', PasswordChangeView.as_view(),name='password_change'),
 
     #common paths
     path('task/',TaskListView.as_view(),name='task'),

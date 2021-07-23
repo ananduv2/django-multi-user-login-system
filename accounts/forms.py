@@ -7,6 +7,7 @@ import datetime
 from django.forms import ModelForm
 from .models import *
 
+
 class StaffCreationForm(UserCreationForm):
     class Meta:
         model = User

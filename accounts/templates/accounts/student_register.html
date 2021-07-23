@@ -17,7 +17,46 @@
 
     <div class="page-wrapper">
         <div class="content container-fluid">
-
+            
+            
+            <form method="get">
+                <div >
+                {% csrf_token %}
+            <div class="content-page">
+                <div class="row filter-row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group custom-mt-form-group">
+                        {{f.form.name}}
+                        <label class="control-label">Name</label><i class="bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group custom-mt-form-group">
+                        {{f.form.email}}
+                        <label class="control-label">Email</label><i class="bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="form-group custom-mt-form-group">
+                        {{f.form.now_attending}}
+                        <label class="control-label">Now Attending</label><i class="bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-2">
+                        <div class="form-group custom-mt-form-group">
+                        {{f.form.status}}
+                        <label class="control-label">Status</label><i class="bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-1">
+                        <button type="submit" class="btn btn-success btn-block mt-4 mb-2"  style="height: 30px;width:50px;border-radius: 50px 50px 50px 50px"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="col-sm-6 col-md-1">
+                        <a type="reset" href="{% url 'student_register' %}" class="btn btn-info btn-block mt-4 mb-2"  style="height: 30px;width:50px;border-radius: 50px 50px 50px 50px"><i class="fas fa-sync" aria-hidden="true"></i></a>
+                    </div>
+                </div></div>
+            </form>
+        
             {% include 'accounts/mini/student_register.html' %}
 
 

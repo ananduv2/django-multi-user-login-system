@@ -12,7 +12,8 @@ class TaskFilter(django_filters.FilterSet):
         exclude =['created_at']
 
 class StudentFilter(django_filters.FilterSet):
-    title = CharFilter(field_name='name',lookup_expr='icontains')
+    name = CharFilter(field_name='name',lookup_expr='icontains')
+    now_attending = CharFilter(field_name='now_attending',lookup_expr='icontains')
     class Meta:
         model = Student
         fields = ['name','email','course_enrolled','now_attending','status']

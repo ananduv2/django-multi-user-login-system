@@ -285,6 +285,8 @@ class StudentRegister(View):
                     no_count = note.count()
                     ###Common code 
                     students=Student.objects.all()
+                    f=StudentFilter(self.request.GET,queryset=students)
+                    students=f.qs
                     for i in students:
                         course_data = StudentCourseData.objects.filter(student=i)
                         i.course_enrolled=[]
@@ -294,7 +296,8 @@ class StudentRegister(View):
                             if j.batch.status == "Ongoing":
                                 i.now_attending.append(j.batch.subject)
                         i.save()
-                    return render(request,'accounts/student_register.html',{'students':students,'note':note,'no_count':no_count})
+                    
+                    return render(request,'accounts/student_register.html',{'f':f,'students':students,'note':note,'no_count':no_count})
                     ###Common code
                 else:
                     return redirect('logout')

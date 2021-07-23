@@ -54,6 +54,10 @@ urlpatterns = [
     path('operations_registration/', OperationsRegistrationView.as_view(),name='operations_registration'),
     path('query_list/', QueryList.as_view(),name='query_list'),
     path('reply_query/<id>/', ReplyQuery.as_view(),name='reply_query'),
+    path('deactivate/staff/<id>/', DeactivateStaff.as_view(),name='deactivate_staff'),
+    path('activate/staff/<id>/', ActivateStaff.as_view(),name='activate_staff'),
+    path('deactivate/student/<id>/', DeactivateStudent.as_view(),name='deactivate_student'),
+    path('activate/student/<id>/', ActivateStudent.as_view(),name='activate_student'),
 
 
 
@@ -69,6 +73,8 @@ urlpatterns = [
     path('my_video_list/<id>/',VideoList.as_view(),name='my_video_list'),
     path('videoplayer/<id>',PlayVideo.as_view(),name='videoplayer'),
     path('send_query/',SendQuery.as_view(),name='send_query'),
+    path('view_query_reply/',ViewQueryReply.as_view(),name='view_query_reply'),
+    path('view_reply/<id>/',ViewQReply.as_view(),name='view_reply'),
 ]
 
 

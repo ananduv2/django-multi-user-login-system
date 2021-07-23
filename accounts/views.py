@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+
 
 
 from .models import *
@@ -150,11 +152,13 @@ class TaskListView(View):
             try:
                 s= Staff.objects.get(user=user)
                 if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
                     ###Common code
                     task=Task.objects.filter(user=s).order_by('-status','created_at')
                     f=TaskFilter(self.request.GET,queryset=task)
                     task=f.qs
-                    return render(request, 'accounts/task_list.html',{'task':task,'f':f})
+                    return render(request, 'accounts/task_list.html',{'task':task,'f':f,'no_count':no_count,'note':note})
                     ###Common code
                 else:
                     return redirect('logout')
@@ -228,6 +232,8 @@ class StudentRegister(View):
             try:
                 s= Staff.objects.get(user=user)
                 if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
                     ###Common code 
                     students=Student.objects.all()
                     for i in students:
@@ -239,7 +245,7 @@ class StudentRegister(View):
                             if j.batch.status == "Ongoing":
                                 i.now_attending.append(j.batch.subject)
                         i.save()
-                    return render(request,'accounts/student_register.html',{'students':students})
+                    return render(request,'accounts/student_register.html',{'students':students,'note':note,'no_count':no_count})
                     ###Common code
                 else:
                     return redirect('logout')
@@ -398,7 +404,7 @@ class OperationsDashboard(View):
                             if j.batch.status == "Ongoing":
                                 i.now_attending.append(j.batch.subject)
                         i.save()
-                    return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba,'ta':ta,'ta_count':ta_count,'students':students,'no_count':no_count,'note':note})
+                    return render(request,'accounts/operations_dashboard.html',{'ba_count':ba_count,'by_count':by_count,'by':by,'ba':ba,'ta':ta,'ta_count':ta_count,'students':students,'no_count':no_count,'note':note,'s':s})
                     ###Common code for operations
                 return redirect('home')
             except:
@@ -411,14 +417,19 @@ class AddBatchView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                t=Staff.objects.filter(stype="3")
-                c=Courses.objects.all()
-                return render(request,'accounts/batch_creation_form.html',{'t':t,'c':c})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    t=Staff.objects.filter(stype="3")
+                    c=Courses.objects.all()
+                    return render(request,'accounts/batch_creation_form.html',{'t':t,'c':c,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -426,30 +437,33 @@ class AddBatchView(View):
     def post(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                subject = request.POST.get('subject')
-                s=Courses.objects.get(name=subject)
-                trainer = request.POST.get('trainer')
-                if trainer!="None":
-                    t=Staff.objects.get(name=trainer)
-                mod = request.POST.get('mod')
-                status = request.POST.get('status')
-                t=request.POST.get('timing')
-                sd=request.POST.get('start_date')
-                ed=request.POST.get('end_date')
-                if trainer=="None":
-                    b=Batch(subject=s,timing=t,start_date=sd,end_date=ed,mode=mod,status=status)
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    subject = request.POST.get('subject')
+                    s=Courses.objects.get(name=subject)
+                    trainer = request.POST.get('trainer')
+                    if trainer!="None":
+                        t=Staff.objects.get(name=trainer)
+                    mod = request.POST.get('mod')
+                    status = request.POST.get('status')
+                    t=request.POST.get('timing')
+                    sd=request.POST.get('start_date')
+                    ed=request.POST.get('end_date')
+                    if trainer=="None":
+                        b=Batch(subject=s,timing=t,start_date=sd,end_date=ed,mode=mod,status=status)
+                    else:
+                        b=Batch(subject=s,trainer=t,timing=t,start_date=sd,end_date=ed,mode=mod,status=status)
+                    b.save()
+                    if status=="1":
+                        return redirect('upcoming_batch_register')
+                    else:
+                        return redirect('active_batch_register')
+                    ###Common code for operations
                 else:
-                    b=Batch(subject=s,trainer=t,timing=t,start_date=sd,end_date=ed,mode=mod,status=status)
-                b.save()
-                if status=="1":
-                    return redirect('upcoming_batch_register')
-                else:
-                    return redirect('active_batch_register')
-                ###Common code for operations
-            else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -461,14 +475,19 @@ class AllBatchView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                b=Batch.objects.filter(mode="1")
-                c=Batch.objects.filter(mode="2")
-                return render(request,'accounts/all_batches.html',{'b':b,'c':c})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    b=Batch.objects.filter(mode="1")
+                    c=Batch.objects.filter(mode="2")
+                    return render(request,'accounts/all_batches.html',{'b':b,'c':c,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -477,14 +496,19 @@ class AllActiveBatchView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                b=Batch.objects.filter(status='Ongoing',mode="1")
-                c=Batch.objects.filter(status='Ongoing',mode="2")
-                return render(request,'accounts/all_active_batches.html',{'b':b,'c':c})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    b=Batch.objects.filter(status='Ongoing',mode="1")
+                    c=Batch.objects.filter(status='Ongoing',mode="2")
+                    return render(request,'accounts/all_active_batches.html',{'b':b,'c':c,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -494,15 +518,20 @@ class EditBatchView(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                b=Batch.objects.get(id=id)
-                form = AddBatchForm(instance=b)
-                msg=""
-                return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form,'msg':msg})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    b=Batch.objects.get(id=id)
+                    form = AddBatchForm(instance=b)
+                    msg=""
+                    return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form,'msg':msg,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -510,23 +539,26 @@ class EditBatchView(View):
     def post(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                b=Batch.objects.get(id=id)
-                form = AddBatchForm(request.POST,instance=b)
-                if form.is_valid():
-                    form.save()
-                    s=form.cleaned_data['status']
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    b=Batch.objects.get(id=id)
+                    form = AddBatchForm(request.POST,instance=b)
+                    if form.is_valid():
+                        form.save()
+                        s=form.cleaned_data['status']
 
-                    if s =="Ongoing":
-                        return redirect('active_batch_register')
-                    else :
-                        return redirect('batch_register')
-                msg="Please review your edit."
-                return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form,'msg':msg})
-                ###Common code for operations
-            else:
+                        if s =="Ongoing":
+                            return redirect('active_batch_register')
+                        else :
+                            return redirect('batch_register')
+                    msg="Please review your edit."
+                    return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form,'msg':msg})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -535,14 +567,19 @@ class DeleteBatch(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                 b=Batch.objects.get(id=id)
-                 msg="Are you sure you want to delete?"
-                 return render(request,'accounts/msg.html',{'b':b,'msg':msg})
-                 ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    b=Batch.objects.get(id=id)
+                    msg="Are you sure you want to delete?"
+                    return render(request,'accounts/msg.html',{'b':b,'msg':msg,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -550,14 +587,17 @@ class DeleteBatch(View):
     def post(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                b=Batch.objects.get(id=id)
-                b.delete()
-                return redirect('operations_dashboard')
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    b=Batch.objects.get(id=id)
+                    b.delete()
+                    return redirect('operations_dashboard')
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -569,14 +609,19 @@ class AllUpcomingBatchView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                b=Batch.objects.filter(status='Yet to start',mode="1")
-                c=Batch.objects.filter(status='Yet to start',mode="2")
-                return render(request,'accounts/all_upcoming_batches.html',{'b':b,'c':c})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    b=Batch.objects.filter(status='Yet to start',mode="1")
+                    c=Batch.objects.filter(status='Yet to start',mode="2")
+                    return render(request,'accounts/all_upcoming_batches.html',{'b':b,'c':c,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -586,13 +631,18 @@ class TrainerList(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                t=Staff.objects.filter(stype="3")
-                return render(request,'accounts/all_trainer_list.html',{'t':t})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    t=Staff.objects.filter(stype="3")
+                    return render(request,'accounts/all_trainer_list.html',{'t':t,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -601,13 +651,18 @@ class TrainerProfileView(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                t=Staff.objects.get(id=id)
-                return render(request,'accounts/trainer_profile.html',{'t':t})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    t=Staff.objects.get(id=id)
+                    return render(request,'accounts/trainer_profile.html',{'t':t,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -618,13 +673,16 @@ class OperationsRegistrationView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                form =StaffCreationForm()
-                return render(request,'accounts/staff_registration.html',{'form':form})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    form =StaffCreationForm()
+                    return render(request,'accounts/staff_registration.html',{'form':form})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -632,22 +690,25 @@ class OperationsRegistrationView(View):
     def post(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                form =StaffCreationForm(request.POST)
-                if form.is_valid():
-                    user = form.save()
-                    name = request.POST.get('name')
-                    mobile = request.POST.get('mobile')
-                    city = request.POST.get('city')
-                    stype=1
-                    s = Staff(user=user, name=name,mobile=mobile, city=city, stype=stype)
-                    s.save()
-                    return HttpResponse("Done")
-                return HttpResponse("Failed")
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    form =StaffCreationForm(request.POST)
+                    if form.is_valid():
+                        user = form.save()
+                        name = request.POST.get('name')
+                        mobile = request.POST.get('mobile')
+                        city = request.POST.get('city')
+                        stype=1
+                        s = Staff(user=user, name=name,mobile=mobile, city=city, stype=stype)
+                        s.save()
+                        return HttpResponse("Done")
+                    return HttpResponse("Failed")
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -656,13 +717,18 @@ class QueryList(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                q=Query.objects.filter(receiver=s).filter(status="Not replied")
-                return render(request,'accounts/read_queries.html',{'q':q})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    q=Query.objects.filter(receiver=s).filter(status="Not replied")
+                    return render(request,'accounts/read_queries.html',{'q':q,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -672,14 +738,19 @@ class ReplyQuery(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                q=Query.objects.get(id=id)
-                form = QuerySendForm(instance=q)
-                return render(request,'accounts/reply_query.html',{'form':form})
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    ###Common code for operations
+                    q=Query.objects.get(id=id)
+                    form = QuerySendForm(instance=q)
+                    return render(request,'accounts/reply_query.html',{'form':form,'no_count':no_count,'note':note})
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -687,19 +758,116 @@ class ReplyQuery(View):
     def post(self, request,id):
         user=request.user
         if user.is_authenticated:
-            s= Staff.objects.get(user=user)
-            if s.stype == "1":
-                ###Common code for operations
-                q=Query.objects.get(id=id)
-                q.reply=request.POST.get('reply')
-                q.status="Replied"
-                q.save()
-                re = q.sender.user
-                n = Notification(sender=user,receiver=re,content="Re : Query",subject=q.subject)
-                n.save()
-                return redirect('query_list')
-                ###Common code for operations
-            else:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    q=Query.objects.get(id=id)
+                    q.reply=request.POST.get('reply')
+                    q.status="Replied"
+                    q.save()
+                    re = q.sender.user
+                    n = Notification(sender=user,receiver=re,content="Re : Query",subject=q.subject)
+                    n.save()
+                    return redirect('query_list')
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class DeactivateStaff(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    t =Staff.objects.get(id=id)
+                    t.status="Inactive"
+                    t.save()
+                    u =t.user
+                    u.is_active = False
+                    u.save()
+                    return redirect('all_trainer_list')
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class ActivateStaff(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    t =Staff.objects.get(id=id)
+                    t.status="Active"
+                    t.save()
+                    u =t.user
+                    u.is_active = True
+                    u.save()
+                    return redirect('all_trainer_list')
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class DeactivateStudent(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    t =Student.objects.get(id=id)
+                    t.status="Inactive"
+                    t.save()
+                    u =t.user
+                    u.is_active = False
+                    u.save()
+                    current_url = reverse(self.request.get_full_path).url_name
+                    return HttpResponseRedirect(current_url)
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class ActivateStudent(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1":
+                    ###Common code for operations
+                    t =Student.objects.get(id=id)
+                    t.status="Active"
+                    t.save()
+                    u =t.user
+                    u.is_active = True
+                    u.save()
+                    current_url = reverse(self.request.get_full_path).url_name
+                    return HttpResponseRedirect(current_url)
+                    ###Common code for operations
+                else:
+                    return redirect('home')
+            except:
                 return redirect('home')
         else:
             return redirect('logout')
@@ -862,6 +1030,41 @@ class SendQuery(View):
             except:
                 return redirect('home')
         return redirect('logout')
+
+
+class ViewQueryReply(View):
+    def get(self, request): 
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                q= Query.objects.filter(sender=s).order_by('-modified')
+                return render(request,'students/responses.html',{'s':s,'no_count':no_count,'note':note,'q':q})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+class ViewQReply(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                q=Query.objects.get(id=id)
+                form = QuerySendForm(instance=q)
+                return render(request,'students/reply.html',{'s':s,'no_count':no_count,'note':note,'form':form})
+                ###Common code for students
+            except:
+                return redirect('home')
+        return redirect('logout')
+
 
 
 

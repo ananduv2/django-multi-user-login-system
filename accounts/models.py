@@ -209,10 +209,28 @@ class Query(models.Model):
     message = models.TextField(max_length=1500,null=True)
     reply = models.TextField(max_length=1500, null=True, blank=True)
     datetime = models.DateField(default=datetime.datetime.now(),null=True, blank=True)
+    modified = models.DateTimeField(auto_now=True,null=True, blank=True)
     status = models.CharField(max_length=100,choices=(('Not replied','Not replied'),('Replied','Replied')),default='Not replied',blank=True)
 
     def __str__(self):
         return "%s %s" % (self.sender,self.subject)
+
+
+class Doubt(models.Model):
+    sender = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='std',null=True,blank=True)
+    receiver = models.ForeignKey(Staff,on_delete=models.CASCADE,related_name='tutor',null=True,limit_choices_to={'stype':"3"})
+    subject = models.CharField(max_length=400,null=True)
+    message = models.TextField(max_length=1500,null=True)
+    ss1=models.ImageField(null=True,blank=True,default="")
+    ss2=models.ImageField(null=True,blank=True,default="")
+    ss3=models.ImageField(null=True,blank=True,default="")
+    reply = models.TextField(max_length=1500, null=True, blank=True)
+    datetime = models.DateField(auto_now_add=True,null=True, blank=True)
+    status = models.CharField(max_length=100,choices=(('Not replied','Not replied'),('Replied','Replied')),default='Not replied',blank=True)
+
+    def __str__(self):
+        s ="to"
+        return "%s %s %s %s" % (self.sender,s, self.receiver,self.subject)
 
 
 class Notification(models.Model):

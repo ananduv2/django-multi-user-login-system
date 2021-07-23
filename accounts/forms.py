@@ -39,7 +39,7 @@ class ProfilePicChange(ModelForm):
 class QuerySendForm(ModelForm):
     class Meta:
         model = Query
-        fields = ['sender','receiver','subject','message']
+        fields = ['sender','receiver','subject','message','reply','datetime']
         
 
         

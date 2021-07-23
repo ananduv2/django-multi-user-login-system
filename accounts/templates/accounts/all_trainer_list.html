@@ -43,13 +43,17 @@
                                         <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
                                             aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <!-- <a class="dropdown-item" href="edit-teacher.html"><i
-                                                    class="fas fa-pencil-alt m-r-5"></i> Edit</a> -->
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i
+                                            <a class="dropdown-item" href="{% url 'activate_staff' i.id %}"><i
+                                                    class="far fa-check-circle m-r-5"></i>Activate</a>
+                                            <a class="dropdown-item" href="{% url 'deactivate_staff' i.id %}"><i
                                                     class="fas fa-ban m-r-5"></i> Deactivate</a>
                                         </div>
                                     </div>
-                                    <h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">{{i.name|title}}</a></h4>
+                                    {% if i.user.is_active %}
+                                    <h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="{% url 'trainer_profile' i.id %}">{{i.name|title}}</a></h4>
+                                    {% else %}
+                                    <h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="{% url 'trainer_profile' i.id %}"  style="color:red">{{i.name|title}}</a></h4>
+                                    {% endif %}
                                     <div class="small text-muted">{{i.user}}</div>
                                 </div>
                             </div>

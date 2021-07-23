@@ -128,17 +128,16 @@ class ProfileUpdate(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                    ###Common code
-                    form = ProfileUpdateForm(instance=s)
-                    return render(request,'accounts/edit_profile.html',{'s':s,'form':form})
-                    ###Common code
-                else:
-                    return redirect('logout')
+                form = ProfileUpdateForm(instance=s)
+                return render(request,'accounts/edit_profile.html',{'s':s,'form':form,'no_count':no_count,'note':note})
             except:
-                return redirect('home')
+                s= Student.objects.get(user=user)
+                form = StudentProfileUpdateForm(instance=s)
+                return render(request,'students/edit_profile.html',{'s':s,'form':form,'no_count':no_count,'note':note})
         else:
             return redirect('logout')
 
@@ -147,19 +146,22 @@ class ProfileUpdate(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                    ###Common code
-                    form = ProfileUpdateForm(request.POST,instance=s)
-                    if form.is_valid():
-                        form.save()
-                        return redirect('home')
-                    else:
-                        return redirect('profile_update')
-                    ###Common code
+                form = ProfileUpdateForm(request.POST,instance=s)
+                if form.is_valid():
+                    form.save()
+                    return redirect('home')
                 else:
-                    return redirect('logout')
+                    return redirect('profile_update')
             except:
-                return redirect('home')
+                s= Student.objects.get(user=user)
+                form = StudentProfileUpdateForm(request.POST,instance=s)
+                print("hello update")
+                if form.is_valid():
+                    print("hello update")
+                    form.save()
+                    return redirect('home')
+                else:
+                    return redirect('profile_update')
         else:
             return redirect('logout')
 

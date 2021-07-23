@@ -170,22 +170,35 @@ class Student(models.Model):
     ('Uttarakhand','Uttarakhand'),
     ('West Bengal','West Bengal')
 )
-    user= models.OneToOneField(User,on_delete=models.CASCADE,null=True)
-    name = models.CharField(max_length=100)
-    mobile = models.CharField(max_length=10)
-    email = models.EmailField(max_length=200)
-    sex = models.CharField(max_length=10,null=True,choices=(('Male','Male'),('Female','Female')))
-    house = models.CharField(max_length=100,null=True)
-    street =models.CharField(max_length=100,null=True)
-    street2 =models.CharField(max_length=100,null=True)
-    city = models.CharField(max_length=100,null=True)
-    state = models.CharField(max_length=100,null=True,choices=state)
-    course_enrolled = models.CharField(max_length=100,null=True)
-    now_attending = models.CharField(max_length=100,null=True)
-    start_date = models.DateField(null=True)
-    shared = models.BooleanField(default=False,choices=((True, 'Yes'), (False, 'No')))
-    payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half')),default='Half')
-    status = models.CharField(max_length=20,choices=(('Active','Active'),('Inactive','Inactive')),default='Active')
+
+    groups = (
+    ('AB+', 'AB+'),
+    ('AB-', 'AB-'),
+    ('A+', 'A+'),
+    ('A-', 'A-'),
+    ('B+', 'B+'),
+    ('B-', 'B-'),
+    ('O+', 'O+'),
+    ('O-', 'O-'),
+    )
+    user= models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
+    name = models.CharField(max_length=100,blank=True)
+    mobile = models.CharField(max_length=10,blank=True)
+    email = models.EmailField(max_length=200,blank=True)
+    sex = models.CharField(max_length=10,null=True,choices=(('Male','Male'),('Female','Female')),blank=True)
+    dob = models.DateField(null=True, blank=True)
+    blood_group = models.CharField(max_length=100,null=True, blank=True,choices=groups)
+    house = models.CharField(max_length=100,null=True,blank=True)
+    street =models.CharField(max_length=100,null=True,blank=True)
+    street2 =models.CharField(max_length=100,null=True,blank=True)
+    city = models.CharField(max_length=100,null=True,blank=True)
+    state = models.CharField(max_length=100,null=True,choices=state,blank=True)
+    course_enrolled = models.CharField(max_length=100,null=True,blank=True)
+    now_attending = models.CharField(max_length=100,null=True,blank=True)
+    start_date = models.DateField(null=True,blank=True)
+    shared = models.BooleanField(default=False,choices=((True, 'Yes'), (False, 'No')),blank=True)
+    payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half')),default='Half',blank=True)
+    status = models.CharField(max_length=20,choices=(('Active','Active'),('Inactive','Inactive')),default='Active',blank=True)
     profile_pic = models.ImageField(null=True,blank=True,default="")
 
     def __str__(self):

@@ -29,6 +29,12 @@ class ProfileUpdateForm(ModelForm):
         fields ='__all__'
         exclude = ['user','name','empid','email','sex','dob','doj','status','stype','profile_pic']
 
+class StudentProfileUpdateForm(ModelForm):
+    class Meta:
+        model = Student
+        fields =['dob','blood_group','mobile','house','street','street2','city','state']
+
+
 class ProfilePicChange(ModelForm):
     class Meta:
         model = Staff

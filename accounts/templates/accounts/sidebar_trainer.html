@@ -14,7 +14,7 @@
                     <ul class="list-unstyled" style="display: none;">
                         <li><a href="all-students.html">Active Batches</a></li>
                         <li><a href="{% url 'active_batch_register' %}">All Active Batches</a></li>
-                        <li><a href="add-student.html"><span>Upcoming Batches</span></a></li>
+                        <li><a href="{% url 'upcoming_batches' %}"><span>Upcoming Batches</span></a></li>
                         <li><a href="{% url 'upcoming_batch_register' %}">All Upcoming Batches</a></li>
                         <li><a href="{% url 'batch_register' %}">Batch Register</a></li>
                     </ul>

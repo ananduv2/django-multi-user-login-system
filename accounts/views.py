@@ -1026,6 +1026,24 @@ class ActiveBatchView(View):
             return redirect('logout')
 
 
+class ViewQueries(View):
+    def get(self, request): 
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s = Staff.objects.get(user=user)
+                if s.stype == "3":
+                    q= Doubt.objects.filter(receiver=s).order_by('-datetime')
+                    return render(request,'accounts/queries.html',{'s':s,'no_count':no_count,'note':note,'q':q})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        return redirect('logout')
+
+
 
 
 class TrainerRegistrationView(View):

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="page-title mb-2">
-                    Active Batch List
+                    Upcoming Batch List
                 </div>
                 <div class="table-responsive">
                     <table class="table table-striped custom-table">
@@ -18,7 +18,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for i in ba %}
+                            {% for i in by %}
                             <tr>
                                 <td>{{i.subject}}</td>
                                 <td>{{i.timing}}</td>
@@ -32,10 +32,10 @@
                                         <div class="dropdown-menu dropdown-menu-right">
                                             <a class="dropdown-item" href="{%url 'batch_edit' i.id %}">
                                                 <i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
-                                                {% if i.trainer__stype == "1" %}
+                                            {% if i.trainer__stype == "1" %}
                                             <a class="dropdown-item" href="{%url 'batch_delete' i.id %}" >
                                                 <i class="fas fa-trash m-r-5"></i>Delete</a>
-                                                {% endif %}
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </td>

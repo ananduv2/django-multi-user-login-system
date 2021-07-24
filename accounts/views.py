@@ -358,73 +358,6 @@ class ProfilePicUpdate(View):
 
 
 
-################################################
-###            Trainer Functions             ###
-################################################
-class TrainerDashboard(View):
-    def get(self, request):
-        user=request.user
-        if user.is_authenticated:
-            try:
-                s= Staff.objects.get(user=user)
-                if s.stype =="3":
-                    ###Common code for trainers
-                    return render(request,'accounts/trainer_dashboard.html')
-                    ###Common code for trainers
-                else:
-                    return redirect('home')
-            except:
-                return redirect('home')
-        else:
-            return redirect('logout')
-
-
-class TrainerRegistrationView(View):
-    def get(self, request):
-        user=request.user
-        if user.is_authenticated:
-            try:
-                s= Staff.objects.get(user=user)
-                if s.stype == "3":
-                    ###Common code for trainers
-                    form =StaffCreationForm()
-                    return render(request,'accounts/staff_registration.html',{'form':form})
-                    ###Common code for trainers
-                else:
-                    return redirect('home')
-            except:
-                return redirect('home')
-        else:
-            return redirect('logout')
-
-    def post(self, request):
-        user=request.user
-        if user.is_authenticated:
-            try:
-                s= Staff.objects.get(user=user)
-                if s.stype == "3":
-                    ###Common code for trainers
-                    form =StaffCreationForm(request.POST)
-                    if form.is_valid():
-                        user = form.save()
-                        name = request.POST.get('name')
-                        mobile = request.POST.get('mobile')
-                        city = request.POST.get('city')
-                        stype=3
-                        s = Staff(user=user, name=name,mobile=mobile, city=city, stype=stype)
-                        s.save()
-                        return HttpResponse("Done")
-                    else:
-                        return HttpResponse("Failed")
-                    ###Common code for trainers
-                else:
-                    return redirect('home')
-            except:
-                return redirect('home')
-        else:
-            return redirect('logout')
-
-
 
 
 
@@ -576,14 +509,14 @@ class EditBatchView(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
+                if s.stype == "1" or s.stype == "3":
                     note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
                     no_count = note.count()
                     ###Common code for operations
                     b=Batch.objects.get(id=id)
                     form = AddBatchForm(instance=b)
                     msg=""
-                    return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form,'msg':msg,'no_count':no_count,'note':note})
+                    return render(request,'accounts/batch_updation_form.html',{'s':s,'b':b,'form':form,'msg':msg,'no_count':no_count,'note':note})
                     ###Common code for operations
                 else:
                     return redirect('home')
@@ -597,7 +530,7 @@ class EditBatchView(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
+                if s.stype == "1" or s.stype == "3":
                     ###Common code for operations
                     b=Batch.objects.get(id=id)
                     form = AddBatchForm(request.POST,instance=b)
@@ -623,18 +556,19 @@ class DeleteBatch(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            s= Staff.objects.get(user=user)
             try:
-                s= Staff.objects.get(user=user)
                 if s.stype == "1":
-                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
-                    no_count = note.count()
                     ###Common code for operations
                     b=Batch.objects.get(id=id)
                     msg="Are you sure you want to delete?"
                     return render(request,'accounts/msg.html',{'b':b,'msg':msg,'no_count':no_count,'note':note})
                     ###Common code for operations
                 else:
-                    return redirect('home')
+                    msg="You dont have permission to delete batches."
+                    return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
             except:
                 return redirect('home')
         else:
@@ -652,7 +586,8 @@ class DeleteBatch(View):
                     return redirect('operations_dashboard')
                     ###Common code for operations
                 else:
-                    return redirect('home')
+                    msg="You dont have permission to delete batches."
+                    return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
             except:
                 return redirect('home')
         else:
@@ -667,13 +602,14 @@ class AllUpcomingBatchView(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
+                if s.stype == "1" or s.stype == "3":
                     note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
                     no_count = note.count()
+                    print("Hello ")
                     ###Common code for operations
                     b=Batch.objects.filter(status='Yet to start',mode="1")
                     c=Batch.objects.filter(status='Yet to start',mode="2")
-                    return render(request,'accounts/all_upcoming_batches.html',{'b':b,'c':c,'no_count':no_count,'note':note})
+                    return render(request,'accounts/all_upcoming_batches.html',{'s':s,'b':b,'c':c,'no_count':no_count,'note':note})
                     ###Common code for operations
                 else:
                     return redirect('home')
@@ -934,11 +870,108 @@ class ActivateStudent(View):
 
 
 
+#########################################################################################################################################
 
 
 
 
 
+
+
+
+################################################
+###            Trainer Functions             ###
+################################################
+class TrainerDashboard(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="3":
+                    ###Common code for trainers
+                    batch = Batch.objects.filter(trainer=s).filter(status="Ongoing")
+                    name = []
+                    scd = StudentCourseData.objects.filter(batch__in=batch)
+                    for i in scd:
+                        name.append(i.student.name)
+                    students = Student.objects.filter(name__in=name)
+                    ba = Batch.objects.filter(trainer=s).filter(status="Ongoing")
+                    ba_count = ba.count()
+                    by = Batch.objects.filter(trainer=s).filter(status="Yet to start")
+                    by_count = by.count()
+                    ta  = Task.objects.filter(user=s).filter(~Q(status="Completed"))
+                    ta_count = ta.count()
+                    return render(request,'accounts/trainer_dashboard.html',{'s':s,'by':by,'ta_count':ta_count,'ta':ta,'ba':ba,'ba_count':ba_count,'by_count':by_count,'note':note, 'no_count':no_count,'students':students})
+                    ###Common code for trainers
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+class TrainerRegistrationView(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    form =StaffCreationForm()
+                    return render(request,'accounts/staff_registration.html',{'form':form})
+                    ###Common code for trainers
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    form =StaffCreationForm(request.POST)
+                    if form.is_valid():
+                        user = form.save()
+                        name = request.POST.get('name')
+                        mobile = request.POST.get('mobile')
+                        city = request.POST.get('city')
+                        stype=3
+                        s = Staff(user=user, name=name,mobile=mobile, city=city, stype=stype)
+                        s.save()
+                        return HttpResponse("Done")
+                    else:
+                        return HttpResponse("Failed")
+                    ###Common code for trainers
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+
+
+
+
+
+
+
+
+
+#########################################################################################################################################
 
 
 

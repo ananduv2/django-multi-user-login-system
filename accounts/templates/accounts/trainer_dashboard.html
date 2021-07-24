@@ -7,6 +7,7 @@
 <div class="main-wrapper">
     
     {% include 'accounts/navbar.html' %}
+    {% include 'accounts/sidebar_trainer.html' %}
 
     
 
@@ -17,13 +18,14 @@
 
     <div class="page-wrapper">
         <div class="content container-fluid">
-
+            {% include 'accounts/status_main_trainers.html' %}
         
 
             <div class="row mt-4">
                 
-                <!--  -->
-                <!--  -->
+                {% include 'accounts/mini/task.html' %}
+                {% include 'accounts/mini/batches.html' %}
+                {% include 'accounts/mini/upcoming_batch.html' %}
 
             </div>
 

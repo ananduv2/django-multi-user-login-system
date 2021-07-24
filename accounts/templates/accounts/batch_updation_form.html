@@ -8,7 +8,15 @@
     
     {% include 'accounts/navbar.html' %}
 
+    {% if s.stype == "1" %}
     {% include 'accounts/sidebar_operations.html' %}
+    {% elif s.stype == "2" %}
+    {% include 'accounts/sidebar_sales.html' %}
+    {% elif s.stype == "3" %}
+    {% include 'accounts/sidebar_trainer.html' %}
+    {% elif s.stype == "4" %}
+    {% include 'accounts/sidebar_admin.html' %}
+    {% endif %}
 
 
 
@@ -42,43 +50,73 @@
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Subject</label>
                             <div class="col-md-9">
-                                <fieldset class="form-control">{{form.subject}}</fieldset>
+                                {% load widget_tweaks %}
+                                {% if s.stype == "1" %}
+                                {% render_field form.subject class="form-control" %}
+                                {% elif s.stype == "3" %}
+                                {% render_field form.subject class="form-control" disabled="True" %}
+                                {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Trainer</label>
                             <div class="col-md-9">
-                                <fieldset class="form-control">{{form.trainer}}</fieldset>
+                                {% load widget_tweaks %}
+                                {% if s.stype == "1" %}
+                                {% render_field form.trainer class="form-control" %}
+                                {% elif s.stype == "3" %}
+                                {% render_field form.trainer class="form-control" disabled="True" %}
+                                {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Timing</label>
                             <div class="col-md-9">
-                                <fieldset class="form-control">{{form.timing}}</fieldset>
+                                {% load widget_tweaks %}
+                                {% if s.stype == "1" %}
+                                {% render_field form.timing class="form-control" %}
+                                {% elif s.stype == "3" %}
+                                {% render_field form.timing class="form-control" disabled="True" %}
+                                {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Start Date</label>
                             <div class="col-md-9">
-                                <fieldset class="form-control">{{form.start_date}}</fieldset>
+                                {% load widget_tweaks %}
+                                {% if s.stype == "1" %}
+                                {% render_field form.start_date class="form-control" %}
+                                {% elif s.stype == "3" %}
+                                {% render_field form.start_date class="form-control" disabled="True" %}
+                                {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">End Date</label>
                             <div class="col-md-9">
-                                <fieldset class="form-control">{{form.end_date}}</fieldset>
+                                {% load widget_tweaks %}
+                                {% if s.stype == "1" %}
+                                {% render_field form.end_date class="form-control" %}
+                                {% elif s.stype == "3" %}
+                                {% render_field form.end_date class="form-control" disabled="True" %}
+                                {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Type</label>
                             <div class="col-md-9">
-                                <fieldset class="form-control">{{form.mode}}</fieldset>
+                                {% load widget_tweaks %}
+                                {% if s.stype == "1" %}
+                                {% render_field form.mode class="form-control" %}
+                                {% elif s.stype == "3" %}
+                                {% render_field form.mode class="form-control" disabled="True" %}
+                                {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Status</label>
                             <div class="col-md-9">
-                                <fieldset class="form-control">{{form.status}}</fieldset>
+                                {% render_field form.status class="form-control" %}
                             </div>
                         </div>
                         <div class="text-right">

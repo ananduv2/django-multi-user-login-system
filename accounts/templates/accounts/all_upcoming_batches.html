@@ -8,7 +8,15 @@
     
     {% include 'accounts/navbar.html' %}
 
+    {% if s.stype == "1" %}
     {% include 'accounts/sidebar_operations.html' %}
+    {% elif s.stype == "2" %}
+    {% include 'accounts/sidebar_sales.html' %}
+    {% elif s.stype == "3" %}
+    {% include 'accounts/sidebar_trainer.html' %}
+    {% elif s.stype == "4" %}
+    {% include 'accounts/sidebar_admin.html' %}
+    {% endif %}
 
 
 
@@ -96,7 +104,7 @@
                                     </a>
                                     <a href="{%url 'batch_delete' i.id %}" class="btn btn-danger btn-sm mb-1">
                                         <i class="fas fa-trash" aria-hidden="true"></i>
-                                        </a>
+                                    </a>
                                     </td>
                                 </tr>
                                 {% empty %}

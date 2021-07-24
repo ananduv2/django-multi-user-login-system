@@ -198,19 +198,15 @@ class TaskListView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
-                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
-                    no_count = note.count()
-                    ###Common code
-                    task=Task.objects.filter(user=s).order_by('-status','created_at')
-                    f=TaskFilter(self.request.GET,queryset=task)
-                    task=f.qs
-                    return render(request, 'accounts/task_list.html',{'task':task,'f':f,'no_count':no_count,'note':note})
-                    ###Common code
-                else:
-                    return redirect('logout')
+                task=Task.objects.filter(user=s).order_by('-status','created_at')
+                f=TaskFilter(self.request.GET,queryset=task)
+                task=f.qs
+                return render(request, 'accounts/task_list.html',{'s':s,'task':task,'f':f,'no_count':no_count,'note':note})
+
             except:
                 return redirect('home')
         else:
@@ -220,12 +216,14 @@ class TaskView(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
                 if s.stype =="1" or s.stype =="2" or s.stype == "3"  or s.stype == "4":
                     ###Common code 
                     task = Task.objects.get(id=id)
-                    return render(request,'accounts/task_details.html',{'task':task})
+                    return render(request,'accounts/task_details.html',{'s':s,'task':task,'no_count':no_count,'note':note})
                     ###Common code
                 else:
                     return redirect('logout')
@@ -238,12 +236,14 @@ class TaskUpdate(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
                 if s.stype =="1" or s.stype =="2" or s.stype == "3" or s.stype == "4":
                     ###Common code 
                     task = Task.objects.get(id=id)
-                    return render(request,'accounts/task_update.html',{'task':task})
+                    return render(request,'accounts/task_update.html',{'s':s,'task':task,'no_count':no_count,'note':note})
                     ###Common code
                 else:
                     return redirect('logout')
@@ -651,7 +651,7 @@ class TrainerList(View):
                     no_count = note.count()
                     ###Common code for operations
                     t=Staff.objects.filter(stype="3")
-                    return render(request,'accounts/all_trainer_list.html',{'t':t,'no_count':no_count,'note':note})
+                    return render(request,'accounts/all_trainer_list.html',{'s':s,'t':t,'no_count':no_count,'note':note})
                     ###Common code for operations
                 else:
                     return redirect('home')

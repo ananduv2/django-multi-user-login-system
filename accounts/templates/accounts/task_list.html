@@ -8,7 +8,16 @@
     
     {% include 'accounts/navbar.html' %}
 
+    {% include 'accounts/navbar.html' %}
+    {% if s.stype == "1" %}
     {% include 'accounts/sidebar_operations.html' %}
+    {% elif s.stype == "2" %}
+    {% include 'accounts/sidebar_sales.html' %}
+    {% elif s.stype == "3" %}
+    {% include 'accounts/sidebar_trainer.html' %}
+    {% elif s.stype == "4" %}
+    {% include 'accounts/sidebar_admin.html' %}
+    {% endif %}
 
 
         <div class="page-wrapper">

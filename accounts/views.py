@@ -297,7 +297,7 @@ class StudentRegister(View):
                                 i.now_attending.append(j.batch.subject)
                         i.save()
                     
-                    return render(request,'accounts/student_register.html',{'f':f,'students':students,'note':note,'no_count':no_count})
+                    return render(request,'accounts/student_register.html',{'s':s,'f':f,'students':students,'note':note,'no_count':no_count})
                     ###Common code
                 else:
                     return redirect('logout')
@@ -464,15 +464,15 @@ class AllBatchView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
-                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
-                    no_count = note.count()
+                if s.stype == "1" or s.stype == "3":
                     ###Common code for operations
                     b=Batch.objects.filter(mode="1")
                     c=Batch.objects.filter(mode="2")
-                    return render(request,'accounts/all_batches.html',{'b':b,'c':c,'no_count':no_count,'note':note})
+                    return render(request,'accounts/all_batches.html',{'s':s,'b':b,'c':c,'no_count':no_count,'note':note})
                     ###Common code for operations
                 else:
                     return redirect('home')
@@ -485,15 +485,15 @@ class AllActiveBatchView(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
-                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
-                    no_count = note.count()
+                if s.stype == "1" or s.stype == "3" :
                     ###Common code for operations
                     b=Batch.objects.filter(status='Ongoing',mode="1")
                     c=Batch.objects.filter(status='Ongoing',mode="2")
-                    return render(request,'accounts/all_active_batches.html',{'b':b,'c':c,'no_count':no_count,'note':note})
+                    return render(request,'accounts/all_active_batches.html',{'s':s,'b':b,'c':c,'no_count':no_count,'note':note})
                     ###Common code for operations
                 else:
                     return redirect('home')
@@ -919,16 +919,63 @@ class TrainerDashboard(View):
                     for i in scd:
                         name.append(i.student.name)
                     students = Student.objects.filter(name__in=name)
+                    for i in students:
+                        course_data = StudentCourseData.objects.filter(student=i)
+                        i.course_enrolled=[]
+                        i.now_attending=[]
+                        for j in course_data:
+                            i.course_enrolled.append(j.batch.subject)
+                            if j.batch.status == "Ongoing":
+                                i.now_attending.append(j.batch.subject)
+                                i.save()
                     ba = Batch.objects.filter(trainer=s).filter(status="Ongoing")
                     ba_count = ba.count()
                     by = Batch.objects.filter(trainer=s).filter(status="Yet to start")
                     by_count = by.count()
                     ta  = Task.objects.filter(user=s).filter(~Q(status="Completed"))
                     ta_count = ta.count()
-                    return render(request,'accounts/trainer_dashboard.html',{'s':s,'by':by,'ta_count':ta_count,'ta':ta,'ba':ba,'ba_count':ba_count,'by_count':by_count,'note':note, 'no_count':no_count,'students':students})
+                    q = Doubt.objects.filter(receiver=s)
+                    q_count = q.count()
+                    return render(request,'accounts/trainer_dashboard.html',{'q':q,'q_count':q_count,'s':s,'by':by,'ta_count':ta_count,'ta':ta,'ba':ba,'ba_count':ba_count,'by_count':by_count,'note':note, 'no_count':no_count,'students':students})
                     ###Common code for trainers
                 else:
                     return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+class MyStudents(View):
+    def get(self, request):
+        user = request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="3":
+                    batch = Batch.objects.filter(trainer=s).filter(status="Ongoing")
+                    name = []
+                    scd = StudentCourseData.objects.filter(batch__in=batch)
+                    for i in scd:
+                        name.append(i.student.name)
+                    students = Student.objects.filter(name__in=name)
+                    f=StudentFilter(self.request.GET,queryset=students)
+                    students=f.qs
+                    for i in students:
+                        course_data = StudentCourseData.objects.filter(student=i)
+                        i.course_enrolled=[]
+                        i.now_attending=[]
+                        for j in course_data:
+                            i.course_enrolled.append(j.batch.subject)
+                            if j.batch.status == "Ongoing":
+                                i.now_attending.append(j.batch.subject)
+                            i.save()
+                    return render(request,'accounts/my_student_register.html',{'s':s,'f':f,'students':students,'note':note,'no_count':no_count})
+                    ###Common code
+                else:
+                    return redirect('logout')
             except:
                 return redirect('home')
         else:

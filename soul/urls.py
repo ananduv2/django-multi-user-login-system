@@ -41,6 +41,7 @@ urlpatterns = [
     #trainer
     path('trainer_dashboard/', TrainerDashboard.as_view(),name='trainer_dashboard'),
     path('trainer_registration/', TrainerRegistrationView.as_view(),name='trainer_registration'),
+    path('my_students/', MyStudents.as_view(),name='my_students'),
 
     #operations
     path('operations_dashboard/', OperationsDashboard.as_view(),name='operations_dashboard'),

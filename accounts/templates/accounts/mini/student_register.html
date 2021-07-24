@@ -29,12 +29,13 @@
                                         <h2>{{student.name}} <span></span></h2>
                                     </td>
                                     <td>{{student.email}}</td>
-                                    <td>{{student.course_enrolled|join:", " }}</td>
+                                    <td>{{student.course_enrolled|join:", " }}</td> 
                                     <td>{{student.now_attending|join:", " }}</td>
                                     <td>{{student.start_date}}</td>
                                     <td>{{student.get_shared_display}}</td>
                                     <td>{{student.payment}}</td>
                                     <td>{{student.status}}</td>
+                                    {% if s.stype == "1" %}
                                     <td class="text-right" style="width:10px">
                                         <div class="dropdown dropdown-action">
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
@@ -45,6 +46,7 @@
                                             </div>
                                         </div>
                                     </td>
+                                    {% endif %}
                                 </tr>
                                 {% else %}
                                 <tr class="holiday-completed">
@@ -59,6 +61,7 @@
                                     <td>{{student.get_shared_display}}</td>
                                     <td>{{student.payment}}</td>
                                     <td>{{student.status}}</td>
+                                    {% if s.stype == "1" %}
                                     <td class="text-right" style="width:10px">
                                         <div class="dropdown dropdown-action">
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
@@ -69,6 +72,7 @@
                                             </div>
                                         </div>
                                     </td>
+                                    {% endif %}
                                 </tr>
                                 {% endif %}
                                     

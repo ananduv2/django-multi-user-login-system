@@ -13,18 +13,18 @@
                             class="menu-arrow"></span></a>
                     <ul class="list-unstyled" style="display: none;">
                         <li><a href="all-students.html">Active Batches</a></li>
-                        <li><a href="all-students.html">All Active Batches</a></li>
+                        <li><a href="{% url 'active_batch_register' %}">All Active Batches</a></li>
                         <li><a href="add-student.html"><span>Upcoming Batches</span></a></li>
                         <li><a href="{% url 'upcoming_batch_register' %}">All Upcoming Batches</a></li>
-                        <li><a href="edit-student.html">Batch Register</a></li>
+                        <li><a href="{% url 'batch_register' %}">Batch Register</a></li>
                     </ul>
                 </li>
                 <li class="submenu">
                     <a href="#"><i class="fas fa-user" aria-hidden="true"></i> <span> Students</span> <span
                             class="menu-arrow"></span></a>
                     <ul class="list-unstyled" style="display: none;">
-                        <li><a href="all-parents.html">My Students</a></li>
-                        <li><a href="all-parents.html">Student Register</a></li>
+                        <li><a href="{% url 'my_students' %}">My Students</a></li>
+                        <li><a href="{% url 'student_register' %}">Student Register</a></li>
                     </ul>
                 </li>
                 </li>
@@ -38,10 +38,10 @@
                 <li>
                     <a href="holidays.html"><i class="fas fa-tasks" aria-hidden="true"></i> Tasks</a>
                 </li>
-                <!-- <li>
-                    <a href="calendar.html"><i class="fas fa-table" aria-hidden="true"></i> Events</a>
-                </li>
                 <li>
+                    <a href="calendar.html"><i class="fas fa-question-circle" aria-hidden="true"></i>Student Queries</a>
+                </li>
+                <!-- <li>
                     <a href="calendar.html"><i class="fas fa-table" aria-hidden="true"></i> Notifications</a>
                 </li> -->
                 

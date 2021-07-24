@@ -57,8 +57,8 @@
                                             <td>{{i.datetime}}</td>
                                             <td>{{i.receiver}}</td>
                                             <td>{{i.subject}}</td>
-                                            <td>{{i.message|slice:":40"}}...</td>
-                                            <td>{{i.reply|slice:":40"}}...</td>
+                                            <td>{{i.message|truncatechars:40 }}</td>
+                                            <td>{{i.reply|truncatechars:40 }}</td>
                                             {% if i.status == "Replied" %}
                                             <td class="text-right">
                                                 <div class="dropdown dropdown-action">

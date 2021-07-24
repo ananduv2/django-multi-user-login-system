@@ -22,15 +22,16 @@
         
 
             <div class="row mt-4">
-                
-                {% include 'accounts/mini/task.html' %}
                 {% include 'accounts/mini/batches.html' %}
-                {% include 'accounts/mini/upcoming_batch.html' %}
-
+                {% include 'accounts/mini/batches.html' %}
+            </div>
+            <div class="row mt-4">
+                {% include 'accounts/mini/task.html' %}
+                {% include 'accounts/mini/queries.html' %}
             </div>
 
 
-            <!--  -->
+            {% include 'accounts/mini/student_register.html' %}
             
         </div>
     </div>

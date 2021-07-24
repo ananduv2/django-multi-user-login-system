@@ -18,6 +18,11 @@ class AddBatchForm(ModelForm):
         model = Batch
         fields ='__all__'
 
+class UpdateBatchForm(ModelForm):
+    class Meta:
+        model = Batch
+        fields =['link','status']
+
 class TaskAllocationForm(ModelForm):
     class Meta:
         model = Task

@@ -507,17 +507,19 @@ class EditBatchView(View):
     def get(self, request,id):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1" or s.stype == "3":
-                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
-                    no_count = note.count()
+                b=Batch.objects.get(id=id)
+                if s.stype == "1":
                     ###Common code for operations
-                    b=Batch.objects.get(id=id)
                     form = AddBatchForm(instance=b)
-                    msg=""
-                    return render(request,'accounts/batch_updation_form.html',{'s':s,'b':b,'form':form,'msg':msg,'no_count':no_count,'note':note})
+                    return render(request,'accounts/batch_updation_form.html',{'s':s,'b':b,'form':form,'no_count':no_count,'note':note})
                     ###Common code for operations
+                elif  s.stype == "3":
+                    update = UpdateBatchForm(instance=b)
+                    return render(request,'accounts/batch_updation_form.html',{'s':s,'b':b,'no_count':no_count,'note':note,'update':update})
                 else:
                     return redirect('home')
             except:
@@ -528,23 +530,42 @@ class EditBatchView(View):
     def post(self, request,id):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1" or s.stype == "3":
+                b=Batch.objects.get(id=id)
+                if s.stype == "1" :
                     ###Common code for operations
-                    b=Batch.objects.get(id=id)
                     form = AddBatchForm(request.POST,instance=b)
                     if form.is_valid():
                         form.save()
-                        s=form.cleaned_data['status']
-
-                        if s =="Ongoing":
-                            return redirect('active_batch_register')
-                        else :
-                            return redirect('batch_register')
-                    msg="Please review your edit."
-                    return render(request,'accounts/batch_updation_form.html',{'b':b,'form':form,'msg':msg})
+                        st=form.cleaned_data['status']
+                        tr= form.cleaned_data['trainer']
+                        if tr:
+                            re = User.objects.get(username=tr.user)
+                            n = Notification(sender=user,receiver=re,content="Batch updated",subject=b)
+                            n.save()
+                            
+                        if s.stype == "1":
+                            if st =="Ongoing":
+                                return redirect('active_batch_register')
+                            else :
+                                return redirect('batch_register')
+                    else:
+                        msg="Please review your edit."
+                        return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
                     ###Common code for operations
+                elif s.stype == "3":
+                    update = UpdateBatchForm(request.POST,instance=b)
+                    if update.is_valid():
+                        update.save()
+                        return redirect('home')
+                    else:
+                        msg="Please review your edit."
+                        return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+
+
                 else:
                     return redirect('home')
             except:

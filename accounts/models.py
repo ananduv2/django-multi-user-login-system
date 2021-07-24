@@ -96,23 +96,23 @@ class Batch(models.Model):
         ('Ongoing', 'Ongoing'),
         ('Completed', 'Completed'),
     ]
-    subject = models.ForeignKey(Courses,on_delete=models.CASCADE,null=True)
-    trainer = models.ForeignKey(Staff,on_delete=models.CASCADE,null=True,limit_choices_to={'stype':"3"})
-    timing = models.CharField(max_length=100, null=True)
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
+    subject = models.ForeignKey(Courses,on_delete=models.CASCADE,null=True,blank=True)
+    trainer = models.ForeignKey(Staff,on_delete=models.CASCADE,null=True,limit_choices_to={'stype':"3"},blank=True)
+    timing = models.CharField(max_length=100, null=True,blank=True)
+    start_date = models.DateField(null=True,blank=True)
+    end_date = models.DateField(null=True,blank=True)
     link = models.CharField(max_length=1000,null=True,blank=True)
     passcode = models.CharField(max_length=100,null=True,blank=True,default="N/A")
-    mode = models.CharField(max_length=100,choices=mod_value,default=1)
-    status = models.CharField(max_length=100,choices=status_value)
+    mode = models.CharField(max_length=100,choices=mod_value,default=1,blank=True)
+    status = models.CharField(max_length=100,choices=status_value,blank=True,default="Yet to start")
 
     def __str__(self):
         return "%s %s %s %s" %(self.trainer , self.subject , self.start_date , self.timing)
 
 
 class BatchData(models.Model):
-    batch = models.ForeignKey(Batch,on_delete=models.CASCADE,null=True)
-    topic = models.CharField(max_length=100,null=True)
+    batch = models.ForeignKey(Batch,on_delete=models.CASCADE,null=True,blank=True)
+    topic = models.CharField(max_length=100,null=True, blank=True)
     link = models.CharField(max_length=1000,null=True, blank=True)
     datecreated = models.DateField(null=True,blank=True,auto_now_add=True)
 

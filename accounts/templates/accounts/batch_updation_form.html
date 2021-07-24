@@ -32,7 +32,7 @@
                     </div>
                     <div class="col-lg-5 col-md-12 col-sm-12 col-12">
                         <ul class="list-inline breadcrumb float-right">
-                        <li class="list-inline-item"><a href="{% url 'operations_dashboard' %}">Dashboard</a></li>
+                        <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
                         <li class="list-inline-item"><a href="#">Batch</a></li>
                         <li class="list-inline-item">Batch Updation Form</li>
                         </ul>
@@ -54,69 +54,84 @@
                                 {% if s.stype == "1" %}
                                 {% render_field form.subject class="form-control" %}
                                 {% elif s.stype == "3" %}
-                                {% render_field form.subject class="form-control" disabled="True" %}
+                                <input type="hidden" class="form-control" value='{{form.subject}}'>
+                                <input type="text" class="form-control" value="{{b.subject}}" disabled>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Trainer</label>
                             <div class="col-md-9">
-                                {% load widget_tweaks %}
                                 {% if s.stype == "1" %}
                                 {% render_field form.trainer class="form-control" %}
                                 {% elif s.stype == "3" %}
-                                {% render_field form.trainer class="form-control" disabled="True" %}
+                                <input type="hidden" class="form-control" value='{{form.trainer}}'>
+                                <input type="text" class="form-control" value="{{b.trainer}}" disabled>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Timing</label>
                             <div class="col-md-9">
-                                {% load widget_tweaks %}
                                 {% if s.stype == "1" %}
                                 {% render_field form.timing class="form-control" %}
                                 {% elif s.stype == "3" %}
-                                {% render_field form.timing class="form-control" disabled="True" %}
+                                <input type="hidden" class="form-control" value='{{form.timing}}'>
+                                <input type="text" class="form-control" value="{{b.timing}}" disabled>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Start Date</label>
                             <div class="col-md-9">
-                                {% load widget_tweaks %}
                                 {% if s.stype == "1" %}
                                 {% render_field form.start_date class="form-control" %}
                                 {% elif s.stype == "3" %}
-                                {% render_field form.start_date class="form-control" disabled="True" %}
+                                <input type="hidden" class="form-control" value='{{form.start_date}}'>
+                                <input type="text" class="form-control" value="{{b.start_date}}" disabled>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">End Date</label>
                             <div class="col-md-9">
-                                {% load widget_tweaks %}
                                 {% if s.stype == "1" %}
                                 {% render_field form.end_date class="form-control" %}
                                 {% elif s.stype == "3" %}
-                                {% render_field form.end_date class="form-control" disabled="True" %}
+                                <input type="hidden" class="form-control" value='{{form.end_date}}'>
+                                <input type="text" class="form-control" value="{{b.end_date}}" disabled>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Type</label>
                             <div class="col-md-9">
-                                {% load widget_tweaks %}
                                 {% if s.stype == "1" %}
                                 {% render_field form.mode class="form-control" %}
                                 {% elif s.stype == "3" %}
-                                {% render_field form.mode class="form-control" disabled="True" %}
+                                <input type="hidden" class="form-control" value='{{form.mode}}'>
+                                <input type="text" class="form-control" value="{{b.get_mode_display}}" disabled>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Link</label>
+                            <div class="col-md-9">
+                                {% if s.stype == "1" %}
+                                {% render_field form.link class="form-control" %}
+                                {% elif s.stype == "3" %}
+                                {% render_field update.link class="form-control" %}
                                 {% endif %}
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">Status</label>
                             <div class="col-md-9">
+                                {% if s.stype == "1" %}
                                 {% render_field form.status class="form-control" %}
+                                {% elif s.stype == "3" %}
+                                {% render_field update.status class="form-control" %}
+                                {% endif %}
                             </div>
                         </div>
                         <div class="text-right">

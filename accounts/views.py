@@ -991,11 +991,33 @@ class UpcomingBatchView(View):
             try:
                 s= Staff.objects.get(user=user)
                 if s.stype == "3":
-                    ###Common code for operations
+                    ###Common code for trainers
                     b=Batch.objects.filter(status='Yet to start',mode="1",trainer=s)
                     c=Batch.objects.filter(status='Yet to start',mode="2",trainer=s)
                     return render(request,'accounts/upcoming_batches.html',{'s':s,'b':b,'c':c,'no_count':no_count,'note':note})
-                    ###Common code for operations
+                    ###Common code for trainers
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+class ActiveBatchView(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3" :
+                    ###Common code for trainers
+                    b=Batch.objects.filter(status='Ongoing',mode="1",trainer=s)
+                    c=Batch.objects.filter(status='Ongoing',mode="2",trainer=s)
+                    return render(request,'accounts/active_batches.html',{'s':s,'b':b,'c':c,'no_count':no_count,'note':note})
+                    ###Common code for trainers
                 else:
                     return redirect('home')
             except:

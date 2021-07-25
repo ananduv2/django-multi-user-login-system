@@ -1,0 +1,23 @@
+<div class="table-responsive">
+    <table class="table table-striped custom-table">
+        <thead>
+            <tr>
+                <th style="min-width:91px;">Date</th>
+                <th style="min-width:91px;">Topic</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in batch_data %}
+            <tr>
+                <td>{{i.datecreated}}</td>
+                <td>{{i.topic}}</td>
+                <td><a href="{% url 'videoplayer' i.id %}" class="btn btn-info"
+                        style="border-radius: 80px 80px 80px 80px ;color: white">
+                        <span style="font-size:15px">Play&nbsp;&nbsp;<i class="fas fa-play"></i></span></a></td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>

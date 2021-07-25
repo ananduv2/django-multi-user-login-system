@@ -1,0 +1,92 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_trainer.html' %}
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                        <h5 class="text-uppercase">Batch Videos</h5>
+                    </div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                        <ul class="list-inline breadcrumb float-right">
+                            <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                            <li class="list-inline-item"><a href="{% url 'active_batch_list' %}">Batch List</a></li>
+                            <li class="list-inline-item">Batch Videos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 col-12">
+            <div class="content-page">
+                <div class="row">
+                    <div class="col-sm-8 col-5">
+                        <h4 class="page-title">{{batch}}</h4>
+                    </div>
+                    <div class="col-sm-4 col-7 text-right m-b-30">
+                        <a href="{% url 'batch_content' batch.id  %}" class="btn btn-primary btn-rounded float-right">
+                            <i class="fas fa-plus"></i> Add Video</a>
+                    </div>
+                </div>
+                                
+                                    
+
+                {% include 'accounts/mini/video_list.html' %}
+
+
+                                    </div>
+                             
+            </div>
+        </div>
+            
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

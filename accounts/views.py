@@ -1142,7 +1142,9 @@ class BatchContent(View):
                         link=form.cleaned_data['link']
                         string ="https://transcripts.gotomeeting.com"
                         if string in link:
-                            form.save()
+                            bd = form.save(commit=False)
+                            bd.batch = batch
+                            bd.save()
                         else:
                             link = link[:-16]+"preview"
                             #print(link)
@@ -1176,7 +1178,25 @@ class BatchContent(View):
         else:
             return redirect('logout')
 
-
+class BatchContentList(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s = Staff.objects.get(user=user)
+                if s.stype == "3":
+                    batch = Batch.objects.get(id=id)
+                    batch_data = BatchData.objects.filter(batch=batch)
+                    print(batch_data)
+                    return render(request,'accounts/video_list.html',{'batch_data':batch_data,'no_count':no_count,'note':note,'batch':batch,'s':s})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
 
 
 
@@ -1327,10 +1347,10 @@ class PlayVideo(View):
     def get(self, request,id): 
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s = Student.objects.get(user=user)
-                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
-                no_count = note.count()
                 ###Common code for students
                 batch_data = BatchData.objects.get(id=id)
                 scd = StudentCourseData.objects.get(student=s,batch=batch_data.batch)
@@ -1341,7 +1361,12 @@ class PlayVideo(View):
                     return render(request,'students/msg.html',{'msg':msg})
                 ###Common code for students
             except:
-                return redirect('home')
+                s = Staff.objects.get(user=user)
+                if s.stype == "3":
+                    batch_data = BatchData.objects.get(id=id)
+                    return render(request,'accounts/videoplayer.html',{'batch_data':batch_data,'no_count':no_count,'note':note})
+                else:
+                    return redirect('home')
         return redirect('logout')
 
 class SendQuery(View):

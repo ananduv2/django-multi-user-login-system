@@ -45,6 +45,9 @@ urlpatterns = [
     path('upcoming_batches/', UpcomingBatchView.as_view(),name='upcoming_batches'),
     path('active_batches/', ActiveBatchView.as_view(),name='active_batches'),
     path('view_queries/', ViewQueries.as_view(),name='view_queries'),
+    path('view_query/<id>', DetailedViewQuery.as_view(),name='view_query'),
+    path('batch_active_list/', ActiveBatchList.as_view(),name='active_batch_list'),
+    path('batch_content/<id>', BatchContent.as_view(),name='batch_content'),
 
 
 

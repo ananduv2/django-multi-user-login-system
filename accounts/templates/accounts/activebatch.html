@@ -1,0 +1,87 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_trainer.html' %}
+
+
+        <div class="page-wrapper">
+            <div class="content container-fluid">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                            <h5 class="text-uppercase">My Active Batches</h5>
+                        </div>
+                        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                            <ul class="list-inline breadcrumb float-right">
+                                <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                                <li class="list-inline-item">My Active Batches</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-page">
+                    <div class="row">
+                        <div class="col-sm-8 col-5">
+                            <h4 class="page-title">Active Courses</h4>
+                        </div>
+                        <!-- <div class="col-sm-4 col-7 text-right m-b-30">
+                            <a href="#" class="btn btn-primary btn-rounded float-right" data-toggle="modal"
+                                data-target="#add_leavetype"><i class="fas fa-plus"></i> Add Leave Type</a>
+                        </div> -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped custom-table">
+                                    <thead>
+                                        <tr >
+                                            <th >Subject</th>
+                                            <th >Timing</th>
+                                            <th >Start Date</th>
+                                            <th >End Date</th>
+                                            <th >Type</th>
+                                            <th ></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in batch %}
+                                        <tr>
+                                            <td>
+                                                <span class="user-img"><img class="rounded-circle" src="{{i.subject.pic.url}}" width="40" height="40">
+                                                    <a href="{{i.link}}">{{i.subject}}</a></span></td>
+                                            <td>{{i.timing}}</td>
+                                            <td>{{i.start_date}}</td>
+                                            <td>{{i.end_date}}</td>
+                                            <td>{{i.get_mode_display}}</td>
+                                            <td class="text-right"><a href="" class="btn btn-info" style="border-radius: 80px 80px 80px 80px ;color: white">
+                                                <span style="font-size:15px">Video List&nbsp;&nbsp;<i class="fas fa-play"></i></span></a></td>
+                                            <td class="text-right">
+                                                <p><a href="{% url 'batch_content' i.id %}" class="btn btn-success " style="border-radius: 80px 80px 80px 80px ;color: white">
+                                                    <span style="font-size:18px"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Video</span></a></p>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr><td colspan="6"><center><b>No active batches</b></center></td></tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

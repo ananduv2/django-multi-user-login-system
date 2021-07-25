@@ -934,7 +934,7 @@ class TrainerDashboard(View):
                     by_count = by.count()
                     ta  = Task.objects.filter(user=s).filter(~Q(status="Completed"))
                     ta_count = ta.count()
-                    q = Doubt.objects.filter(receiver=s)
+                    q = Doubt.objects.filter(receiver=s).filter(status="Not replied")
                     q_count = q.count()
                     return render(request,'accounts/trainer_dashboard.html',{'q':q,'q_count':q_count,'s':s,'by':by,'ta_count':ta_count,'ta':ta,'ba':ba,'ba_count':ba_count,'by_count':by_count,'note':note, 'no_count':no_count,'students':students})
                     ###Common code for trainers
@@ -1042,6 +1042,143 @@ class ViewQueries(View):
             except:
                 return redirect('home')
         return redirect('logout')
+
+
+class DetailedViewQuery(View):
+    def get(self, request,id): 
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s = Staff.objects.get(user=user)
+                q= Doubt.objects.filter(receiver=s).get(id=id)
+                if s.stype == "3":
+                    form = SolutionSendForm(instance=q)
+                    return render(request,'accounts/send_solution.html',{'form': form,'s':s,'no_count':no_count,'note':note,'q':q})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        return redirect('logout')
+    
+    def post(self, request,id): 
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s = Staff.objects.get(user=user)
+                q= Doubt.objects.get(id=id)
+                form = SolutionSendForm(request.POST,instance=q)
+                re = q.sender.user
+                subject=q.subject
+                if form.is_valid():
+                    form.save()
+                    q.status ="Replied"
+                    q.save()
+                    n = Notification(sender=user,receiver=re,content="Re : Doubt",subject=subject)
+                    n.save()
+                    msg="Reply send Successfully!."
+                    return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+                else:
+                    msg="Encountered an error.Feel free to contact the developers in case this error persist."
+                    return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class ActiveBatchList(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s = Staff.objects.get(user=user)
+                batch = Batch.objects.filter(trainer=s).filter(status="Ongoing")
+                if s.stype == "3":
+                    return render(request,'accounts/activebatch.html',{'s':s,'batch':batch,'no_count':no_count,'note':note})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class BatchContent(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s = Staff.objects.get(user=user)
+                if s.stype == "3":
+                    batch = Batch.objects.get(id=id)
+                    batch_data = BatchData(batch=batch)
+                    form = AddBatchData(instance=batch_data)
+                    return render(request,'accounts/add_video.html',{'form':form,'s':s,'no_count':no_count,'note':note,'batch':batch})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s = Staff.objects.get(user=user)
+                if s.stype == "3":
+                    batch = Batch.objects.get(id=id)
+                    batch_data = BatchData(batch=batch)
+                    form = AddBatchData(request.POST,instance=batch_data)
+                    if form.is_valid():
+                        link=form.cleaned_data['link']
+                        string ="https://transcripts.gotomeeting.com"
+                        if string in link:
+                            form.save()
+                        else:
+                            link = link[:-16]+"preview"
+                            #print(link)
+                            bd = form.save(commit=False)
+                            bd.link = link
+                            bd.batch = batch
+                            bd.save()
+                        
+                        scd = StudentCourseData.objects.filter(batch=batch)
+                        name = []
+                        for i in scd:
+                            name.append(i.student)
+                            #print(i.student)
+                        students = Student.objects.filter(name__in=name)
+                        print(students)
+                        for i in students:
+                            #print(i)
+                            re = i.user
+                            
+                            n = Notification(sender=user,receiver=re,content="Batch Video Uploaded",subject=batch)
+                            n.save()
+                        msg="Course video added and notifications send"
+                        return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+                    else:
+                        msg="Course video adding failed"
+                        return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+
+
 
 
 

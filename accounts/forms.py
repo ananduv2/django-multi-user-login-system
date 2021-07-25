@@ -67,4 +67,14 @@ class DoubtSendForm(ModelForm):
         fields = '__all__'
         
 
+class SolutionSendForm(ModelForm):
+    class Meta:
+        model = Doubt
+        fields = ['reply']
+
+class AddBatchData(ModelForm):
+    class Meta:
+        model = BatchData
+        fields = ['batch','topic', 'link']
+
         

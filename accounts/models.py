@@ -201,6 +201,9 @@ class Student(models.Model):
     payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half')),default='Half',blank=True)
     status = models.CharField(max_length=20,choices=(('Active','Active'),('Inactive','Inactive')),default='Active',blank=True)
     profile_pic = models.ImageField(null=True,blank=True,default="")
+    total_fees = models.IntegerField(max_length=100,null=True,blank=True)
+    fees_paid = models.IntegerField(max_length=100,null=True,blank=True)
+    balance = models.IntegerField(max_length=100,null=True,blank=True)
 
     def __str__(self):
         return self.name
@@ -257,3 +260,23 @@ class Notification(models.Model):
 
     def __str__(self):
         return "%s %s" % (self.receiver,self.subject)
+
+
+
+
+
+class Lead(models.Model):
+    groups = (
+    ('New', 'New'),
+    ('In Pipeline', 'In Pipeline'),
+    ('Converted', 'Converted'),
+    ('Lost', 'Lost'),
+    ('Not Interested', 'Not Interested'),
+    )
+    name = models.CharField(max_length=100,null=True, blank=True)
+    email = models.EmailField(max_length=200,null=True,blank=True)
+    mobile = models.CharField(max_length=10,null=True,blank=True)
+    status = models.CharField(max_length=100,null=True, blank=True,choices=groups,default="New")
+
+    def __str__(self):
+        return self.name

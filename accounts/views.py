@@ -227,16 +227,16 @@ class AddStudentCourseData(View):
             try:
                 s= Staff.objects.get(user=user)
                 student = Student.objects.get(id=id)
-                print(student)
+                #print(student)
                 form = AddStudentCourseDataForm(request.POST)
                 if form.is_valid():
-                    print("hello update")
+                    #print("hello update")
                     f =form.save(commit=False)
                     f.student = student
                     f.save()
-                    print("Hello testing")
+                    #print("Hello testing")
                     re = student.user
-                    print(re)
+                    #print(re)
                     n = Notification(sender=user,receiver=re,content="Batch update",subject="Added to a new batch")
                     n.save()
                     return redirect('student_profile_view',args=(student.id))
@@ -1424,7 +1424,7 @@ class PlayVideo(View):
                 if scd.payment =="Full":
                     return render(request,'students/videoplayer.html',{'batch_data':batch_data,'no_count':no_count,'note':note})
                 else:
-                    msg="Please contact you representative!"
+                    msg="Please contact you representative to access this course videos!"
                     return render(request,'students/msg.html',{'msg':msg})
                 ###Common code for students
             except:

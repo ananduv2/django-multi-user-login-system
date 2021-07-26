@@ -433,11 +433,10 @@ class SalesDashboard(View):
                     new = Lead.objects.filter(status="New").filter(generator=s)
                     new_count = new.count()
                     pipe = Lead.objects.filter(status="In Pipeline").filter(generator=s)
-                    print(pipe)
                     pipe_count = pipe.count()
-                    print("This too")
-                    print(pipe_count)
-                    return render(request,'accounts/sales_dashboard.html',{'s':s,'no_count':no_count,'note':note,'new':new,'new_count':new_count,'pipe':pipe,'pipe_count':pipe_count})
+                    closure = Lead.objects.filter(status="Converted").filter(generator=s)
+                    closure_count = closure.count()
+                    return render(request,'accounts/sales_dashboard.html',{'closure_count':closure_count,'s':s,'no_count':no_count,'note':note,'new':new,'new_count':new_count,'pipe':pipe,'pipe_count':pipe_count})
                 else:
                     return redirect('home')
             except:

@@ -1,2 +1,37 @@
-<h1>Sales Dashboard</h1>
-<a href="{% url 'logout' %}">Logout</a>
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+    {% include 'accounts/sidebar_sales.html' %}
+
+    
+
+
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            {% include 'accounts/status_main_sales.html' %}
+        
+
+            <div class="row mt-4">
+                
+            </div>
+            <div class="row mt-4">
+                
+            </div>
+
+
+            
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

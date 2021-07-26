@@ -25,8 +25,10 @@
                                 {% if student.user.is_active %}
                                 <tr>
                                     <td>
-                                        <h2><a href="" class="avatar text-white"><img src="{{student.profile_pic.url}}" width="40" height="40" alt="{{student.name}}"></a></h2>
-                                        <h2>{{student.name}} <span></span></h2>
+                                        <h2><a href="{% url 'student_profile_view' student.id %}" class="avatar text-white">
+                                            <img src="{{student.profile_pic.url}}" width="40" height="40" alt="{{student.name}}">
+                                        </a></h2>
+                                        <h2><a href="{% url 'student_profile_view' student.id %}">{{student.name}}</a><span></span></h2>
                                     </td>
                                     <td>{{student.email}}</td>
                                     <td>{{student.course_enrolled|join:", " }}</td> 

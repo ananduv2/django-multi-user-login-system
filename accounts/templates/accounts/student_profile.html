@@ -1,0 +1,104 @@
+{% extends 'accounts/main.html' %}
+{% block content %}
+    <div class="main-wrapper">  
+    {% include 'accounts/navbar.html' %}
+
+    {% if s.stype == "1" %}
+    {% include 'accounts/sidebar_operations.html' %}
+    {% elif s.stype == "2" %}
+    {% include 'accounts/sidebar_sales.html' %}
+    {% elif s.stype == "3" %}
+    {% include 'accounts/sidebar_trainer.html' %}
+    {% elif s.stype == "4" %}
+    {% include 'accounts/sidebar_admin.html' %}
+    {% endif %}
+
+            <div class="content container" style="padding-top:5%;padding-left: 5%;">
+                <!--  Body Content -->
+
+                        <div class="page-header">
+                            <div class="row">
+                                <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                                    <h5 class="text-uppercase">{{student.name}}'s Profile</h5>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-12">
+                                    <ul class="list-inline float-right">
+                                        <li>
+                                            <a href="{% url 'home' %}" class="btn btn-info " style="border-radius: 80px 80px 80px 80px ;color: white">
+                                            <i class="fas fa-home"></i>&nbsp;&nbsp;<span style="font-size:18px">Home</span></a>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-box m-b-0">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-view">
+                                        <div class="profile-img-wrap">
+                                            <div class="profile-img">
+                                                <img class="avatar" src="{{student.profile_pic.url}}" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="profile-basic">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="profile-info-left">
+                                                        <h3 class="user-name m-t-0">{{student.name}}</h3>
+                                                        <h5 class="company-role m-t-0 m-b-0">Student Profile</h5>
+                                                        <small class="text-muted">{{student.user}}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <ul class="personal-info">
+                                                        <li>
+                                                            <span class="title">Phone:</span>
+                                                            <span class="text"><a href="">{{student.mobile}}</a></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Email:</span>
+                                                            <span class="text"><a href=""><span class="__cf_email__"
+                                                                        data-cfemail="7d17181b1b180f04100a12131a3d18051c100d1118531e1210">{{student.user}}</span></a></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Birthday:</span>
+                                                            <span class="text">{{student.dob}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Blood Group:</span>
+                                                            <p class="text">{{student.blood_group}}</p>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Gender:</span>
+                                                            <span class="text">{{student.sex}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Date of joining:</span>
+                                                            <span class="text">{{student.start_date}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    
+                                                </div>
+                                                <div class="col-md-7">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {% include 'accounts/mini/student_course_data.html' %}
+
+
+                <!--  Body Content -->
+            </div>
+
+
+
+{% endblock %}

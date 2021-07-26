@@ -155,9 +155,9 @@ class ProfileUpdate(View):
             except:
                 s= Student.objects.get(user=user)
                 form = StudentProfileUpdateForm(request.POST,instance=s)
-                print("hello update")
+                #print("hello update")
                 if form.is_valid():
-                    print("hello update")
+                    #print("hello update")
                     form.save()
                     return redirect('home')
                 else:
@@ -179,6 +179,70 @@ class MarkAsRead(View):
                     i.save()
                 return redirect('home')
                 ###Common code
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+class StudentProfileView(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                student = Student.objects.get(id=id)
+                scd = StudentCourseData.objects.filter(student=student)
+                return render(request,'accounts/student_profile.html',{'s':s,'no_count':no_count,'note':note,'student':student,'scd':scd})
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+class AddStudentCourseData(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                student = Student.objects.get(id=id)
+                form = AddStudentCourseDataForm()
+                return render(request,'accounts/add_scd.html',{'s':s,'student':student,'no_count':no_count,'note':note,'form':form})
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                student = Student.objects.get(id=id)
+                print(student)
+                form = AddStudentCourseDataForm(request.POST)
+                if form.is_valid():
+                    print("hello update")
+                    f =form.save(commit=False)
+                    f.student = student
+                    f.save()
+                    print("Hello testing")
+                    re = student.user
+                    print(re)
+                    n = Notification(sender=user,receiver=re,content="Batch update",subject="Added to a new batch")
+                    n.save()
+                    return redirect('student_profile_view',args=(student.id))
+                else:
+                    msg="Unable to add data. If you find this as an error report it to the development team. "
+                    return render(request,'okmsg',{'s':s,'msg':msg,'no_count':no_count,'note':note,'msg':msg})
             except:
                 return redirect('home')
         else:
@@ -434,7 +498,7 @@ class AddBatchView(View):
                     s=Courses.objects.get(name=subject)
                     trainer = request.POST.get('trainer')
                     if trainer!="None":
-                        t=Staff.objects.get(name=trainer)
+                        tra=Staff.objects.get(name=trainer)
                     mod = request.POST.get('mod')
                     status = request.POST.get('status')
                     t=request.POST.get('timing')
@@ -443,7 +507,10 @@ class AddBatchView(View):
                     if trainer=="None":
                         b=Batch(subject=s,timing=t,start_date=sd,end_date=ed,mode=mod,status=status)
                     else:
-                        b=Batch(subject=s,trainer=t,timing=t,start_date=sd,end_date=ed,mode=mod,status=status)
+                        b=Batch(subject=s,trainer=tra,timing=t,start_date=sd,end_date=ed,mode=mod,status=status)
+                        re = tra.user
+                        n = Notification(sender=user,receiver=re,content="Batch created",subject=b)
+                        n.save()
                     b.save()
                     if status=="1":
                         return redirect('upcoming_batch_register')

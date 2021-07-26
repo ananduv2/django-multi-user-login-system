@@ -77,4 +77,10 @@ class AddBatchData(ModelForm):
         model = BatchData
         fields = ['batch','topic', 'link']
 
+class AddStudentCourseDataForm(ModelForm):
+    class Meta:
+        model = StudentCourseData
+        fields = '__all__'
+        
+
         

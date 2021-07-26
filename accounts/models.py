@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
+from django.db.models import Q
 
 # Create your models here.
 class Staff(models.Model):
@@ -206,9 +207,9 @@ class Student(models.Model):
 
 
 class StudentCourseData(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='student',null=True)
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE,related_name='batch')
-    payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half'),('Not Paid','Not Paid')),default='Not Paid')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='student',null=True,blank=True)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE,related_name='batch',limit_choices_to=Q(status="Ongoing")|Q(status="Yet to start"),blank=True)
+    payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half'),('Not Paid','Not Paid')),default='Not Paid',blank=True)
     
     def __str__(self):
         s=" 's "

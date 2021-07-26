@@ -414,6 +414,36 @@ class ProfilePicUpdate(View):
         else:
             return redirect('logout')
                 
+##########################################################################################################################################
+
+
+################################################
+###            Sales Functions               ###
+################################################
+
+class SalesDashboard(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="2":
+                    note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                    no_count = note.count()
+                    new = Lead.objects.filter(status="New").filter(generator=s)
+                    new_count = new.count()
+                    pipe = Lead.objects.filter(status="In Pipeline").filter(generator=s)
+                    print(pipe)
+                    pipe_count = pipe.count()
+                    print("This too")
+                    print(pipe_count)
+                    return render(request,'accounts/sales_dashboard.html',{'s':s,'no_count':no_count,'note':note,'new':new,'new_count':new_count,'pipe':pipe,'pipe_count':pipe_count})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
 
 
 
@@ -421,9 +451,7 @@ class ProfilePicUpdate(View):
 
 
 
-
-
-
+##########################################################################################################################################
 
 
 ################################################

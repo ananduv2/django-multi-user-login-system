@@ -56,6 +56,17 @@ urlpatterns = [
 
 
 
+    #sales
+    path('sales_dashboard/', SalesDashboard.as_view(),name='sales_dashboard'),
+
+
+
+
+
+
+
+
+
     #operations
     path('operations_dashboard/', OperationsDashboard.as_view(),name='operations_dashboard'),
     path('batch_register/', AllBatchView.as_view(),name='batch_register'),
@@ -73,9 +84,6 @@ urlpatterns = [
     path('activate/staff/<id>/', ActivateStaff.as_view(),name='activate_staff'),
     path('deactivate/student/<id>/', DeactivateStudent.as_view(),name='deactivate_student'),
     path('activate/student/<id>/', ActivateStudent.as_view(),name='activate_student'),
-
-
-
 
 
 

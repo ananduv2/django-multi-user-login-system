@@ -18,3 +18,12 @@ class StudentFilter(django_filters.FilterSet):
         model = Student
         fields = ['name','email','course_enrolled','now_attending','status']
 
+class LeadFilter(django_filters.FilterSet):
+    name = CharFilter(field_name='name',lookup_expr='icontains')
+    mobile = CharFilter(field_name='mobile',lookup_expr='icontains')
+    email = CharFilter(field_name='email',lookup_expr='icontains')
+    class Meta:
+        model = Task
+        fields = '__all__'
+        exclude =['created_on']
+

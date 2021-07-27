@@ -278,6 +278,7 @@ class Lead(models.Model):
     email = models.EmailField(max_length=200,null=True,blank=True)
     mobile = models.CharField(max_length=10,null=True,blank=True)
     generator = models.ForeignKey(Staff,on_delete=models.PROTECT, blank=True,null=True,limit_choices_to={'stype':"2"})
+    created_on = models.DateField(auto_now_add=True, null=True, blank=True)
     status = models.CharField(max_length=100,null=True, blank=True,choices=groups,default="New")
 
     def __str__(self):

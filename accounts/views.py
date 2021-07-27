@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from datetime import date
 
 
 
@@ -432,9 +433,13 @@ class SalesDashboard(View):
                     no_count = note.count()
                     new = Lead.objects.filter(status="New").filter(generator=s)
                     new_count = new.count()
+                    #for i in new:
+                        #days = datetime.timedelta(30)
+                        #print(i.created_on-days)
                     pipe = Lead.objects.filter(status="In Pipeline").filter(generator=s)
                     pipe_count = pipe.count()
-                    closure = Lead.objects.filter(status="Converted").filter(generator=s)
+                    days = datetime.timedelta(30)
+                    closure = Lead.objects.filter(status="Converted").filter(generator=s).filter(created_on__month__gte=date.today().month-1)
                     closure_count = closure.count()
                     return render(request,'accounts/sales_dashboard.html',{'closure_count':closure_count,'s':s,'no_count':no_count,'note':note,'new':new,'new_count':new_count,'pipe':pipe,'pipe_count':pipe_count})
                 else:
@@ -443,6 +448,51 @@ class SalesDashboard(View):
                 return redirect('home')
         else:
             return redirect('logout')
+
+
+class CreateLead(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="2":
+                    form = LeadCreateForm()
+                    return render(request,'accounts/create_lead.html',{'form':form,'s':s,'no_count':no_count,'note':note})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    
+    def post(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="2":
+                    form = LeadCreateForm(request.POST)
+                    if form.is_valid():
+                        f = form.save(commit=False)
+                        f.generator = s
+                        f.save()
+                        return redirect('home')
+                    else:
+                        msg ="Failed to create lead.If this issue persist please contact the technical team."
+                        return render(request,'accounts/okmsg.html',{'msg':msg,'s':s,'no_count':no_count,'note':note}) 
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
 
 
 
@@ -1448,7 +1498,7 @@ class PlayVideo(View):
                 ###Common code for students
                 batch_data = BatchData.objects.get(id=id)
                 scd = StudentCourseData.objects.get(student=s,batch=batch_data.batch)
-                if scd.payment =="Full":
+                if scd.payment =="Full" or scd.optional =="Yes":
                     return render(request,'students/videoplayer.html',{'batch_data':batch_data,'no_count':no_count,'note':note})
                 else:
                     msg="Please contact you representative to access this course videos!"

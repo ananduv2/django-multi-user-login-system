@@ -83,4 +83,9 @@ class AddStudentCourseDataForm(ModelForm):
         fields = '__all__'
         
 
+class LeadCreateForm(ModelForm):
+    class Meta:
+        model = Lead
+        fields = '__all__'
+
         

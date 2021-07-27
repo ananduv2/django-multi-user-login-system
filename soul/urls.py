@@ -58,6 +58,7 @@ urlpatterns = [
 
     #sales
     path('sales_dashboard/', SalesDashboard.as_view(),name='sales_dashboard'),
+    path('lead/create/', CreateLead.as_view(),name='create_lead'),
 
 
 

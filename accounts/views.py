@@ -156,9 +156,7 @@ class ProfileUpdate(View):
             except:
                 s= Student.objects.get(user=user)
                 form = StudentProfileUpdateForm(request.POST,instance=s)
-                #print("hello update")
                 if form.is_valid():
-                    #print("hello update")
                     form.save()
                     return redirect('home')
                 else:
@@ -228,16 +226,12 @@ class AddStudentCourseData(View):
             try:
                 s= Staff.objects.get(user=user)
                 student = Student.objects.get(id=id)
-                #print(student)
                 form = AddStudentCourseDataForm(request.POST)
                 if form.is_valid():
-                    #print("hello update")
                     f =form.save(commit=False)
                     f.student = student
                     f.save()
-                    #print("Hello testing")
                     re = student.user
-                    #print(re)
                     n = Notification(sender=user,receiver=re,content="Batch update",subject="Added to a new batch")
                     n.save()
                     return redirect('student_profile_view',args=(student.id))
@@ -435,12 +429,10 @@ class SalesDashboard(View):
                     new_count = new.count()
                     #for i in new:
                         #days = datetime.timedelta(30)
-                        #print(i.created_on-days)
                     pipe = Lead.objects.filter(status="In Pipeline").filter(generator=s)
                     pipe_count = pipe.count()
                     #days = datetime.timedelta(30)
                     lead = Lead.objects.filter(generator=s).order_by('-created_on')
-                    print(lead)
                     closure = Lead.objects.filter(status="Converted").filter(generator=s).filter(created_on__month__gte=date.today().month-1)
                     closure_count = closure.count()
                     return render(request,'accounts/sales_dashboard.html',{'lead':lead,'closure_count':closure_count,'s':s,'no_count':no_count,'note':note,'new':new,'new_count':new_count,'pipe':pipe,'pipe_count':pipe_count})
@@ -577,6 +569,50 @@ class MyLeadRegister(View):
             return redirect('logout')
 
 
+class LeadUpdateView(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="2":
+                    lead = Lead.objects.get(id=id)
+                    form = LeadCreateForm(instance=lead)
+                    return render(request,'accounts/lead_update.html',{'form':form,'s':s,'no_count':no_count,'note':note,'lead':lead})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="2":
+                    lead = Lead.objects.get(id=id)
+                    form = LeadCreateForm(request.POST,instance=lead)
+                    if form.is_valid():
+                        f = form.save(commit=False)
+                        f.generator=s
+                        f.save()
+                        return redirect('home')
+                    else:
+                        msg ="Failed to update lead.If this issue persist please contact the technical team."
+                        return render(request,'accounts/okmsg.html',{'msg':msg,'s':s,'no_count':no_count,'note':note}) 
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
 
 
 
@@ -609,7 +645,6 @@ class OperationsDashboard(View):
                     students=Student.objects.all()
                     note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
                     no_count = note.count()
-                    print(no_count)
                     for i in students:
                         course_data = StudentCourseData.objects.filter(student=i)
                         i.course_enrolled=[]
@@ -855,7 +890,6 @@ class AllUpcomingBatchView(View):
                 if s.stype == "1" or s.stype == "3":
                     note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
                     no_count = note.count()
-                    print("Hello ")
                     ###Common code for operations
                     b=Batch.objects.filter(status='Yet to start',mode="1")
                     c=Batch.objects.filter(status='Yet to start',mode="2")
@@ -1376,7 +1410,6 @@ class BatchContent(View):
                             bd.save()
                         else:
                             link = link[:-16]+"preview"
-                            #print(link)
                             bd = form.save(commit=False)
                             bd.link = link
                             bd.batch = batch
@@ -1386,11 +1419,8 @@ class BatchContent(View):
                         name = []
                         for i in scd:
                             name.append(i.student)
-                            #print(i.student)
                         students = Student.objects.filter(name__in=name)
-                        print(students)
                         for i in students:
-                            #print(i)
                             re = i.user
                             
                             n = Notification(sender=user,receiver=re,content="Batch Video Uploaded",subject=batch)
@@ -1418,7 +1448,6 @@ class BatchContentList(View):
                 if s.stype == "3":
                     batch = Batch.objects.get(id=id)
                     batch_data = BatchData.objects.filter(batch=batch)
-                    print(batch_data)
                     return render(request,'accounts/video_list.html',{'batch_data':batch_data,'no_count':no_count,'note':note,'batch':batch,'s':s})
                 else:
                     return redirect('home')

@@ -23,7 +23,7 @@ class LeadFilter(django_filters.FilterSet):
     mobile = CharFilter(field_name='mobile',lookup_expr='icontains')
     email = CharFilter(field_name='email',lookup_expr='icontains')
     class Meta:
-        model = Task
+        model = Lead
         fields = '__all__'
         exclude =['created_on']
 

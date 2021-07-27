@@ -62,6 +62,7 @@ urlpatterns = [
     path('lead/new/', MyNewLead.as_view(),name='new_lead'),
     path('lead/in_pipeline/', MyLeadInPipeline.as_view(),name='lead_in_pipeline'),
     path('lead/closed/', MyClosedLead.as_view(),name='closed_lead'),
+    path('lead/register/', MyLeadRegister.as_view(),name='lead_register'),
 
 
 

@@ -533,6 +533,28 @@ class MyLeadInPipeline(View):
         else:
             return redirect('logout')
 
+class MyClosedLead(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="2":
+                    lead = Lead.objects.filter(status="Closed").filter(generator=s)
+                    f=LeadFilter(self.request.GET,queryset=lead)
+                    lead=f.qs
+                    return render(request,'accounts/closed_lead.html',{'f':f,'s':s,'no_count':no_count,'note':note,'lead':lead})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+
 
 
 

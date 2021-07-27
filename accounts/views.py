@@ -438,10 +438,12 @@ class SalesDashboard(View):
                         #print(i.created_on-days)
                     pipe = Lead.objects.filter(status="In Pipeline").filter(generator=s)
                     pipe_count = pipe.count()
-                    days = datetime.timedelta(30)
+                    #days = datetime.timedelta(30)
+                    lead = Lead.objects.filter(generator=s).order_by('-created_on')
+                    print(lead)
                     closure = Lead.objects.filter(status="Converted").filter(generator=s).filter(created_on__month__gte=date.today().month-1)
                     closure_count = closure.count()
-                    return render(request,'accounts/sales_dashboard.html',{'closure_count':closure_count,'s':s,'no_count':no_count,'note':note,'new':new,'new_count':new_count,'pipe':pipe,'pipe_count':pipe_count})
+                    return render(request,'accounts/sales_dashboard.html',{'lead':lead,'closure_count':closure_count,'s':s,'no_count':no_count,'note':note,'new':new,'new_count':new_count,'pipe':pipe,'pipe_count':pipe_count})
                 else:
                     return redirect('home')
             except:

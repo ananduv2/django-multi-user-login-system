@@ -60,6 +60,7 @@ urlpatterns = [
     path('sales_dashboard/', SalesDashboard.as_view(),name='sales_dashboard'),
     path('lead/create/', CreateLead.as_view(),name='create_lead'),
     path('lead/new/', MyNewLead.as_view(),name='new_lead'),
+    path('lead/in_pipeline/', MyLeadInPipeline.as_view(),name='lead_in_pipeline'),
 
 
 

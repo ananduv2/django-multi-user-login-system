@@ -1,0 +1,49 @@
+<div class="col-lg-6">
+    <div class="content-page">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-title mb-2">
+                    New Lead
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width:91px;">Name</th>
+                                <th style="min-width:50px;">Email</th>
+                                <th style="min-width:50px;">Mobile</th>
+                                <th class="text-right">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in new %}
+                            <tr>
+                                <td>{{i.name}}</td>
+                                <td>{{i.email}}</td>
+                                <td>{{i.mobile}}</td>
+                                <td></td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                            aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="">
+                                                <i class="fa fa-eye m-r-5"></i> View</a>
+                                            <a class="dropdown-item" href="" >
+                                                <i class="fas fa-pencil-alt m-r-5"></i> Update</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% empty %}
+                                <td colspan="5"><center><b>No new leads</b></center></td>
+                            </tr>
+                            {% endfor %}
+            
+                                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

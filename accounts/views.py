@@ -9,6 +9,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from datetime import date
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 
 
@@ -409,6 +410,12 @@ class ProfilePicUpdate(View):
                     return render(request,'students/msg.html',{'msg':msg,'s':s,'no_count':no_count,'note':note})
         else:
             return redirect('logout')
+
+
+
+
+
+            
                 
 ##########################################################################################################################################
 
@@ -636,6 +643,13 @@ class CreateStudentView(View):
                         msg="Learner account created successfully."
                         l.status = "Converted"
                         l.save()
+                        send_mail(
+                            '[TEQSTORIES] Account Created',
+                            'Hello learner, Your learner account has been created successfully.Please login to http://http://127.0.0.1/ with your email as username and mobile number as password.',
+                            'anandubs1409@gmail.com',
+                            [l.email],
+                            fail_silently=False,
+                        )
                     except:
                         msg="Learner account creation failed."
                     return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})

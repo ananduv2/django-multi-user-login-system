@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from datetime import date
+from django.contrib.auth.models import User
 
 
 
@@ -432,8 +433,7 @@ class SalesDashboard(View):
                     pipe = Lead.objects.filter(status="In Pipeline").filter(generator=s)
                     pipe_count = pipe.count()
                     #days = datetime.timedelta(30)
-                    print(user.password)
-                    lead = Lead.objects.filter(generator=s).order_by('-created_on')
+                    lead = Lead.objects.filter(generator=s).filter(Q(status="In Pipeline")|Q(status="New")).order_by('-created_on')
                     closure = Lead.objects.filter(status="Converted").filter(generator=s).filter(created_on__month__gte=date.today().month-1)
                     closure_count = closure.count()
                     return render(request,'accounts/sales_dashboard.html',{'lead':lead,'closure_count':closure_count,'s':s,'no_count':no_count,'note':note,'new':new,'new_count':new_count,'pipe':pipe,'pipe_count':pipe_count})
@@ -608,6 +608,38 @@ class LeadUpdateView(View):
                     else:
                         msg ="Failed to update lead.If this issue persist please contact the technical team."
                         return render(request,'accounts/okmsg.html',{'msg':msg,'s':s,'no_count':no_count,'note':note}) 
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+
+class CreateStudentView(View):
+    def get(self, request, id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "2":
+                    ###Common code for operations
+                    l =Lead.objects.get(id=id)
+                    user = User.objects.create_user(l.email,l.email,l.mobile)
+                    try:
+                        user.save()
+                        student = Student(user=user,name=l.name,email=l.email,mobile=l.mobile,sex=l.sex)
+                        student.save()
+                        msg="Learner account created successfully."
+                        l.status = "Converted"
+                        l.save()
+                    except:
+                        msg="Learner account creation failed."
+                    return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+                    ###Common code for operations
                 else:
                     return redirect('home')
             except:
@@ -1155,6 +1187,10 @@ class ActivateStudent(View):
 
 
 
+
+
+
+
 #########################################################################################################################################
 
 
@@ -1532,11 +1568,12 @@ class StudentDashboard(View):
     def get(self, request):
         user=request.user
         if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
             try:
                 s = Student.objects.get(user=user)
-                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
-                no_count = note.count()
                 ###Common code for students
+                print(s)
                 scd = StudentCourseData.objects.filter(student=s).filter(~Q(batch__status="Yet to start"))
                 scd_count = scd.count()
                 c = Courses.objects.all()

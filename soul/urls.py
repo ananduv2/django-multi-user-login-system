@@ -71,6 +71,7 @@ urlpatterns = [
     path('lead/closed/', MyClosedLead.as_view(),name='closed_lead'),
     path('lead/register/', MyLeadRegister.as_view(),name='lead_register'),
     path('lead/update/<id>/', LeadUpdateView.as_view(),name='lead_update'),
+    path('learner/create/<id>/', CreateStudentView.as_view(),name='create_student'),
 
 
 

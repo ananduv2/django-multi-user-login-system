@@ -432,6 +432,7 @@ class SalesDashboard(View):
                     pipe = Lead.objects.filter(status="In Pipeline").filter(generator=s)
                     pipe_count = pipe.count()
                     #days = datetime.timedelta(30)
+                    print(user.password)
                     lead = Lead.objects.filter(generator=s).order_by('-created_on')
                     closure = Lead.objects.filter(status="Converted").filter(generator=s).filter(created_on__month__gte=date.today().month-1)
                     closure_count = closure.count()

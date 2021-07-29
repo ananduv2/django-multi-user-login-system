@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from django.conf.urls import url,include
 from django.conf.urls.static import static
@@ -28,6 +29,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('mark_as_read/', MarkAsRead.as_view(),name='mark_as_read'),
     path('accounts/password_change/', PasswordChangeView.as_view(),name='password_change'),
+
+    #password reset paths
+    path('reset_password/', auth_views.PasswordResetView.as_view(template_name='accounts/forgot_password.html'),name='reset_password'),
+    path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name='accounts/password_reset_sent.html'),name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='accounts/set_new_password.html'),name='password_reset_confirm'),
+    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'),name='password_reset_complete'),
 
     #common paths
     path('task/',TaskListView.as_view(),name='task'),

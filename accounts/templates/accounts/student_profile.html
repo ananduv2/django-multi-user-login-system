@@ -50,6 +50,7 @@
                                                         <small class="text-muted">{{student.user}}</small>
                                                     </div>
                                                 </div>
+                                                {% if s.stype == "1" %}
                                                 <div class="col-md-7">
                                                     <ul class="personal-info">
                                                         <li>
@@ -79,6 +80,29 @@
                                                         </li>
                                                     </ul>
                                                 </div>
+                                                {% else %}
+                                                <div class="col-md-7">
+                                                    <ul class="personal-info">
+                                                        <li>
+                                                            <span class="title">Email:</span>
+                                                            <span class="text"><a href=""><span class="__cf_email__"
+                                                                        data-cfemail="7d17181b1b180f04100a12131a3d18051c100d1118531e1210">{{student.user}}</span></a></span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Blood Group:</span>
+                                                            <p class="text">{{student.blood_group}}</p>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Gender:</span>
+                                                            <span class="text">{{student.sex}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="title">Date of joining:</span>
+                                                            <span class="text">{{student.start_date}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                {% endif %}
                                                 <div class="col-md-5">
                                                     
                                                 </div>

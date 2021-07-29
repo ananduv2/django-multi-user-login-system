@@ -48,7 +48,7 @@ urlpatterns = [
     path('scd/add/<id>', AddStudentCourseData.as_view(),name='add_scd'),
 
     #trainer
-    path('trainer_dashboard/', TrainerDashboard.as_view(),name='trainer_dashboard'),
+    path('trainer/home/', TrainerDashboard.as_view(),name='trainer_dashboard'),
     path('trainer_registration/', TrainerRegistrationView.as_view(),name='trainer_registration'),
     path('my_students/', MyStudents.as_view(),name='my_students'),
     path('upcoming_batches/', UpcomingBatchView.as_view(),name='upcoming_batches'),
@@ -64,7 +64,7 @@ urlpatterns = [
 
 
     #sales
-    path('sales_dashboard/', SalesDashboard.as_view(),name='sales_dashboard'),
+    path('sales/home/', SalesDashboard.as_view(),name='sales_dashboard'),
     path('lead/create/', CreateLead.as_view(),name='create_lead'),
     path('lead/new/', MyNewLead.as_view(),name='new_lead'),
     path('lead/in_pipeline/', MyLeadInPipeline.as_view(),name='lead_in_pipeline'),
@@ -82,7 +82,7 @@ urlpatterns = [
 
 
     #operations
-    path('operations_dashboard/', OperationsDashboard.as_view(),name='operations_dashboard'),
+    path('operations/home/', OperationsDashboard.as_view(),name='operations_dashboard'),
     path('batch_register/', AllBatchView.as_view(),name='batch_register'),
     path('active_batch_register/', AllActiveBatchView.as_view(),name='active_batch_register'),
     path('batch_creation_form/', AddBatchView.as_view(),name='batch_creation_form'),
@@ -98,6 +98,15 @@ urlpatterns = [
     path('activate/staff/<id>/', ActivateStaff.as_view(),name='activate_staff'),
     path('deactivate/student/<id>/', DeactivateStudent.as_view(),name='deactivate_student'),
     path('activate/student/<id>/', ActivateStudent.as_view(),name='activate_student'),
+
+
+
+
+
+
+
+    #students
+    path('main/home/',AdminDashboardView.as_view(),name='admin_view'),
 
 
 

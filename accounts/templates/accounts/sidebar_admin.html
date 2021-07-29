@@ -1,0 +1,62 @@
+
+
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="menu-title">ADMINISTRATION</li>
+                <li >
+                    <a href="{% url 'home' %}"><i class="fas fa-tachometer-alt" aria-hidden="true"></i> Dashboard</a>
+                </li>
+                <li class="submenu">
+                    <a href="#"><i class="fas fa-users-cog"></i> <span> Staff Register</span> <span
+                            class="menu-arrow"></span></a>
+                    <ul class="list-unstyled" style="display: none;">
+                        <li><a href="">Operations Register</a></li>
+                        <li><a href="">Business Developer Register</a></li>
+                        <li><a href="">Trainer Register</a></li>
+                    </ul>
+                </li>
+                </li>
+                <li>
+                <li class="submenu">
+                    <a href="#"><i class="fas fa-users" aria-hidden="true"></i> <span>Batches</span> <span
+                            class="menu-arrow"></span></a>
+                    <ul class="list-unstyled" style="display: none;">
+                        <li><a href="{% url 'active_batch_register' %}">Active Batches</a></li>
+                        <li><a href="{% url 'upcoming_batch_register' %}">Upcoming Batches</a></li>
+                        <li><a href="{% url 'batch_register' %}">Batch Register</a></li>
+                    </ul>
+                </li>
+                <li class="submenu">
+                    <a href="#"><i class="fas fa-user" aria-hidden="true"></i> <span> Students</span> <span
+                            class="menu-arrow"></span></a>
+                    <ul class="list-unstyled" style="display: none;">
+                        <li><a href="{% url 'student_register' %}">Student Register</a></li>
+                    </ul>
+                </li>
+                </li>
+                <!-- <li>
+                    <a href="{% url 'student_register' %}" style="width: 80%; display: inline-block;">
+                        <i class="fas fa-user-graduate"></i>Student_Register</a>
+                </li> -->
+                <!-- <li>
+                    <a href="exam-list.html"><i class="fas fa-table" aria-hidden="true"></i> Apply for leave</a>
+                </li> -->
+                <li>
+                    <a href="{% url 'task' %}"><i class="fas fa-tasks" aria-hidden="true"></i>Assign Tasks</a>
+                </li>
+                <!-- <li>
+                    <a href="{% url 'view_queries' %}"><i class="fas fa-question-circle" aria-hidden="true"></i>Student Queries</a>
+                </li> -->
+                <!-- <li>
+                    <a href="calendar.html"><i class="fas fa-table" aria-hidden="true"></i> Notifications</a>
+                </li> -->
+                
+                        
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

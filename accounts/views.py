@@ -99,7 +99,7 @@ class HomeView(View):
                 elif s.stype == "3" :
                     return redirect('trainer_dashboard')
                 elif s.stype == "4" :
-                    return redirect('admin_dashboard')
+                    return redirect('admin_view')
                 else:
                     return redirect('logout')
             except:
@@ -415,7 +415,7 @@ class ProfilePicUpdate(View):
 
 
 
-            
+
                 
 ##########################################################################################################################################
 
@@ -640,12 +640,12 @@ class CreateStudentView(View):
                         user.save()
                         student = Student(user=user,name=l.name,email=l.email,mobile=l.mobile,sex=l.sex)
                         student.save()
-                        msg="Learner account created successfully."
+                        msg="Learner account created successfully and mails have been sent."
                         l.status = "Converted"
                         l.save()
                         send_mail(
                             '[TEQSTORIES] Account Created',
-                            'Hello learner, Your learner account has been created successfully.Please login to http://http://127.0.0.1/ with your email as username and mobile number as password.',
+                            'Hello learner, Your learner account has been created successfully.Please login to http://127.0.0.1/ with your email as username and mobile number as password.',
                             'anandubs1409@gmail.com',
                             [l.email],
                             fail_silently=False,
@@ -1843,4 +1843,58 @@ class ViewDReply(View):
 
 
 
+
+
+
+
+
+
+
+
+
+##########################################################################################################################################
+
+
+################################################
+###            Admin Functions               ###
+################################################
+
+class AdminDashboardView(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="4":
+                    ###Common code for trainers
+                    leads = Lead.objects.filter(Q(status="New")|Q(status="In Pipeline"))
+                    leads_count = leads.count()
+                    closure = Lead.objects.filter(status="Converted").filter(created_on__month__gte=date.today().month-1)
+                    closure_count = closure.count()
+                    active_trainers = Staff.objects.filter(stype="3")
+                    active_trainers_count = 0
+                    for trainer in active_trainers:
+                        if trainer.user.is_active:
+                            active_trainers_count = active_trainers_count + 1
+                    active_staff = Staff.objects.all()
+                    active_staff_count = 0
+                    for staff in active_staff:
+                        if staff.user.is_active:
+                            active_staff_count = active_staff_count + 1
+                    active_batches = Batch.objects.filter(status="Ongoing")
+                    active_batches_count = active_batches.count()
+                    upcoming_batches = Batch.objects.filter(status="Yet to start")
+                    upcoming_batches_count = upcoming_batches.count()
+                    staff_pending_task = Task.objects.filter(~Q(status="Completed"))
+                    staff_pending_task_count = staff_pending_task.count()
+                    return render(request,'accounts/admin_dashboard.html',{'s':s,'note':note, 'no_count':no_count,'leads':leads,'leads_count':leads_count,'closure':closure,'closure_count':closure_count,'active_trainers':active_trainers,'active_trainers_count':active_trainers_count,'active_batches':active_batches,'upcoming_batches':upcoming_batches,'staff_pending_task_count':staff_pending_task_count,'staff_pending_task':staff_pending_task})
+                    ###Common code for trainers
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
 

@@ -1871,6 +1871,8 @@ class AdminDashboardView(View):
                     ###Common code for trainers
                     leads = Lead.objects.filter(Q(status="New")|Q(status="In Pipeline"))
                     leads_count = leads.count()
+                    new_lead_count = Lead.objects.filter(status="New").count()
+                    pipeline_lead_count = Lead.objects.filter(status="In Pipeline").count()
                     closure = Lead.objects.filter(status="Converted").filter(created_on__month__gte=date.today().month-1)
                     closure_count = closure.count()
                     active_trainers = Staff.objects.filter(stype="3")
@@ -1889,7 +1891,7 @@ class AdminDashboardView(View):
                     upcoming_batches_count = upcoming_batches.count()
                     staff_pending_task = Task.objects.filter(~Q(status="Completed"))
                     staff_pending_task_count = staff_pending_task.count()
-                    return render(request,'accounts/admin_dashboard.html',{'s':s,'note':note, 'no_count':no_count,'leads':leads,'leads_count':leads_count,'closure':closure,'closure_count':closure_count,'active_trainers':active_trainers,'active_trainers_count':active_trainers_count,'active_batches':active_batches,'upcoming_batches':upcoming_batches,'staff_pending_task_count':staff_pending_task_count,'staff_pending_task':staff_pending_task})
+                    return render(request,'accounts/admin_dashboard.html',{'new_lead_count':new_lead_count,'pipeline_lead_count':pipeline_lead_count,'s':s,'note':note, 'no_count':no_count,'leads':leads,'leads_count':leads_count,'closure':closure,'closure_count':closure_count,'active_trainers':active_trainers,'active_trainers_count':active_trainers_count,'active_batches':active_batches,'upcoming_batches':upcoming_batches,'staff_pending_task_count':staff_pending_task_count,'staff_pending_task':staff_pending_task,'active_staff_count':active_staff_count,'active_batches_count':active_batches_count,'upcoming_batches_count':upcoming_batches_count})
                     ###Common code for trainers
                 else:
                     return redirect('home')

@@ -1,0 +1,21 @@
+<div class="col-lg-6">   
+    <div class="content-page">
+        <div class="page-title">Lead Status</div>
+        <div id="graph"></div>
+    </div>
+</div>
+<script>
+    var colorsDash = ['#8E37D7', '#01c0c8' ,'#6B8DD6'];
+    Morris.Donut({
+    element: 'graph',
+    colors: colorsDash,
+    data: [
+        {value: '{{closure_count}}', label: 'Converted'},
+        {value: '{{new_lead_count}}', label: 'New'},
+        {value: '{{pipeline_lead_count}}', label: 'In Pipeline'},
+    ],
+    formatter: function (x) { return x }
+    }).on('click', function(i, row){
+    console.log(i, row);
+    });
+</script>

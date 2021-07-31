@@ -46,6 +46,7 @@ urlpatterns = [
     path('profile/update/pic/', ProfilePicUpdate.as_view(),name='profile_pic_update'),
     path('profile/student/<id>', StudentProfileView.as_view(),name='student_profile_view'),
     path('scd/add/<id>', AddStudentCourseData.as_view(),name='add_scd'),
+    path('scd/delete/<id>', RemoveSCD.as_view(),name='delete_scd'),
 
     #trainer
     path('trainer/home/', TrainerDashboard.as_view(),name='trainer_dashboard'),

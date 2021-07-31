@@ -233,14 +233,16 @@ class AddStudentCourseData(View):
                 s= Staff.objects.get(user=user)
                 student = Student.objects.get(id=id)
                 form = AddStudentCourseDataForm(request.POST)
+                print("Hello testing")
                 if form.is_valid():
                     f =form.save(commit=False)
                     f.student = student
                     f.save()
+                    print("Hello testing 2")
                     re = student.user
                     n = Notification(sender=user,receiver=re,content="Batch update",subject="Added to a new batch")
                     n.save()
-                    return redirect('student_profile_view',args=(student.id))
+                    return redirect('student_profile_view',id=student.id)
                 else:
                     msg="Unable to add data. If you find this as an error report it to the development team. "
                     return render(request,'okmsg',{'s':s,'msg':msg,'no_count':no_count,'note':note,'msg':msg})
@@ -1112,7 +1114,7 @@ class DeactivateStudent(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1" :
+                if s.stype == "1" or s.stype == "4":
                     ###Common code for operations
                     t =Student.objects.get(id=id)
                     t.status="Inactive"
@@ -1135,7 +1137,7 @@ class ActivateStudent(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
+                if s.stype == "1" or s.stype == "4":
                     ###Common code for operations
                     t =Student.objects.get(id=id)
                     t.status="Active"
@@ -1151,6 +1153,29 @@ class ActivateStudent(View):
                 return redirect('home')
         else:
             return redirect('logout')
+
+
+class RemoveSCD(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "1" or s.stype=="4" :
+                    scd = StudentCourseData.objects.get(id=id)
+                    scd.delete()
+                    return redirect(request.META['HTTP_REFERER'])
+                else:
+                    msg="Failed to delete Student Course Data"
+                    return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+                
+
+
+
 
 
 
@@ -1979,6 +2004,44 @@ class RegisterNewStaff(View):
         else:
             return redirect('logout')
                 
+
+class AssignTask(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="4":
+                    form = TaskAllocationForm()
+                    return render(request,'accounts/task_assign_form.html',{'form':form,'note':note,'no_count':no_count,'s':s})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="4":
+                    form = TaskAllocationForm(request.POST)
+                    if form.is_valid():
+                        form.save()
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
 
 
 

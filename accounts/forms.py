@@ -80,7 +80,7 @@ class AddBatchData(ModelForm):
 class AddStudentCourseDataForm(ModelForm):
     class Meta:
         model = StudentCourseData
-        fields = '__all__'
+        fields = ['batch','payment']
         
 
 class LeadCreateForm(ModelForm):

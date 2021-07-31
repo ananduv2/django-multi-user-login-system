@@ -40,8 +40,7 @@
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
                                                 aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href=""><i class="fas fa-edit"></i>Edit</a>
-                                                    <a class="dropdown-item" href=""><i class="fas fa-trash"></i>Remove</a>
+                                                    <a class="dropdown-item" href="{% url 'delete_scd' i.id %}"><i class="fas fa-trash"></i>Remove</a>
                                             </div>
                                         </div>
                                     </td>

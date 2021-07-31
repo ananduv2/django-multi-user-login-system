@@ -37,7 +37,7 @@
                                     <td>{{student.get_shared_display}}</td>
                                     <td>{{student.payment}}</td>
                                     <td>{{student.status}}</td>
-                                    {% if s.stype == "1" %}
+                                    {% if s.stype == "1" or s.stype == "4" %}
                                     <td class="text-right" style="width:10px">
                                         <div class="dropdown dropdown-action">
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
@@ -63,7 +63,7 @@
                                     <td>{{student.get_shared_display}}</td>
                                     <td>{{student.payment}}</td>
                                     <td>{{student.status}}</td>
-                                    {% if s.stype == "1" %}
+                                    {% if s.stype == "1" or s.stype == "4" %}
                                     <td class="text-right" style="width:10px">
                                         <div class="dropdown dropdown-action">
                                             <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"

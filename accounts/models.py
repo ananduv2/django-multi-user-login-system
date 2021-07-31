@@ -129,9 +129,9 @@ class Task(models.Model):
     user = models.ForeignKey(Staff,on_delete=models.CASCADE,null=True)
     title = models.CharField(max_length=100,null=True)
     description = models.TextField(max_length=500,null=True)
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True,blank=True)
     assigned_by = models.ForeignKey(Staff,on_delete=models.CASCADE,null=True,related_name='sender')
-    status = models.CharField(max_length=100,choices=status_value,default='Yet to start')
+    status = models.CharField(max_length=100,choices=status_value,default='Yet to start',blank=True)
 
     def __str__(self):
         return "%s %s" %(self.user , self.title)
@@ -213,7 +213,7 @@ class StudentCourseData(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='student',null=True,blank=True)
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE,related_name='batch',limit_choices_to=Q(status="Ongoing")|Q(status="Yet to start"),blank=True)
     payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half'),('Not Paid','Not Paid')),default='Not Paid',blank=True)
-    optional = models.CharField(max_length=20,choices=(('Yes','Yes'),('No','No')),default="No")
+    optional = models.CharField(max_length=20,choices=(('Yes','Yes'),('No','No')),default="No",null=True)
     
     def __str__(self):
         s=" 's "

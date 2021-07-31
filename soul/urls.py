@@ -51,14 +51,17 @@ urlpatterns = [
     #trainer
     path('trainer/home/', TrainerDashboard.as_view(),name='trainer_dashboard'),
     path('trainer_registration/', TrainerRegistrationView.as_view(),name='trainer_registration'),
-    path('my_students/', MyStudents.as_view(),name='my_students'),
-    path('upcoming_batches/', UpcomingBatchView.as_view(),name='upcoming_batches'),
-    path('active_batches/', ActiveBatchView.as_view(),name='active_batches'),
-    path('view_queries/', ViewQueries.as_view(),name='view_queries'),
-    path('view_query/<id>', DetailedViewQuery.as_view(),name='view_query'),
-    path('batch_active_list/', ActiveBatchList.as_view(),name='active_batch_list'),
-    path('batch_content/<id>', BatchContent.as_view(),name='batch_content'),
-    path('batch_content_list/<id>', BatchContentList.as_view(),name='batch_content_list'),
+    path('trainer/students/', MyStudents.as_view(),name='my_students'),
+    path('trainer/upcoming_batches/', UpcomingBatchView.as_view(),name='upcoming_batches'),
+    path('trainer/active_batches/', ActiveBatchView.as_view(),name='active_batches'),
+    path('trainer/view_queries/', ViewQueries.as_view(),name='view_queries'),
+    path('trainer/view_query/<id>', DetailedViewQuery.as_view(),name='view_query'),
+    path('trainer/batch_active_list/', ActiveBatchList.as_view(),name='active_batch_list'),
+    path('trainer/batch_content/<id>', BatchContent.as_view(),name='batch_content'),
+    path('trainer/batch_content_list/<id>', BatchContentList.as_view(),name='batch_content_list'),
+    path('trainer/add_assignment/', AddAssignment.as_view(),name='add_assignment'),
+    
+
 
 
 

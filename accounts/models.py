@@ -120,6 +120,18 @@ class BatchData(models.Model):
     def __str__(self):
         return "%s %s" %(self.batch , self.topic)
 
+class Assignment(models.Model):
+    batch = models.ForeignKey(Batch,on_delete=models.CASCADE,null=True,blank=True,limit_choices_to={'status':"Ongoing"})
+    topic = models.CharField(max_length=100,null=True, blank=True)
+    description = models.TextField(max_length=100,null=True, blank=True)
+    link = models.CharField(max_length=1000,null=True, blank=True)
+    datecreated = models.DateField(null=True,blank=True,auto_now_add=True)
+
+    def __str__(self):
+        return "%s %s" %(self.batch , self.topic)
+
+
+
 class Task(models.Model):
     status_value= [
         ('Yet to start', 'Yet to start'),

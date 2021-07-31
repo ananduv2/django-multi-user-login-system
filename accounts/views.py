@@ -1542,6 +1542,72 @@ class TrainerRegistrationView(View):
             return redirect('logout')
 
 
+class AddAssignment(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    form = AddAssignmentForm()
+                    print(form)
+                    return render(request,'accounts/add_assignment.html',{'form':form,'s':s,'no_count':no_count,'note':note})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    form = AddAssignmentForm(request.POST)
+                    try:
+                        link = request.POST['link']
+                        if link == "":
+                            f = form.save(commit=False)
+                            f.link = "N/A"
+                            f.save()
+                        else:
+                            f = form.save(commit=False)
+                            f.link = link
+                            f.save()
+                        batch = form.cleaned_data['batch']
+                        scd = StudentCourseData.objects.filter(batch=batch)
+                        name = []
+                        for i in scd:
+                            name.append(i.student)
+                        students = Student.objects.filter(name__in=name)
+                        for i in students:
+                            re = i.user
+                            n = Notification(sender=user,receiver=re,content="Assignment Uploaded for",subject=batch)
+                            n.save()
+                        msg="Assignment added successfully and notifications send."
+                        return render(request,'accounts/okmsg.html',{'msg':msg,'no_count':no_count,'note':note,'s':s})
+                    except:
+                        msg="Assignment adding failed.Please contact tech team for more information."
+                        return render(request,'accounts/okmsg.html',{'msg':msg,'no_count':no_count,'note':note,'s':s})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+
+
+
 
 
 
@@ -1650,7 +1716,7 @@ class PlayVideo(View):
                     return render(request,'students/videoplayer.html',{'batch_data':batch_data,'no_count':no_count,'note':note})
                 else:
                     msg="Please contact you representative to access this course videos!"
-                    return render(request,'students/msg.html',{'msg':msg})
+                    return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
                 s = Staff.objects.get(user=user)

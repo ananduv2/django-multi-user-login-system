@@ -93,4 +93,10 @@ class NewStaffRegisterForm(ModelForm):
         model = Staff
         fields = ['name','empid','mobile','email','sex','doj','dob','blood_group','stype']
 
+class AddAssignmentForm(ModelForm):
+    class Meta:
+        model = Assignment
+        fields = '__all__'
+        exclude = ['link','datecreated']
+
         

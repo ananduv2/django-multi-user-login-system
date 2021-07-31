@@ -1926,3 +1926,24 @@ class OperationsRegisterView(View):
             return redirect('logout')
 
 
+class SalesRegisterView(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="4":
+                    staff = Staff.objects.filter(stype="2")
+                    f=StaffFilter(self.request.GET,queryset=staff)
+                    staff=f.qs
+                    return render(request,'accounts/sales_register.html',{'staff':staff,'no_count':no_count,'note':note,'s':s,'f':f})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+

@@ -88,4 +88,9 @@ class LeadCreateForm(ModelForm):
         model = Lead
         fields = '__all__'
 
+class NewStaffRegisterForm(ModelForm):
+    class Meta:
+        model = Staff
+        fields = ['name','empid','mobile','email','sex','doj','dob','blood_group','stype']
+
         

@@ -995,51 +995,6 @@ class TrainerProfileView(View):
             return redirect('logout')
 
 
-
-class OperationsRegistrationView(View):
-    def get(self, request):
-        user=request.user
-        if user.is_authenticated:
-            try:
-                s= Staff.objects.get(user=user)
-                if s.stype == "1":
-                    ###Common code for operations
-                    form =StaffCreationForm()
-                    return render(request,'accounts/staff_registration.html',{'form':form})
-                    ###Common code for operations
-                else:
-                    return redirect('home')
-            except:
-                return redirect('home')
-        else:
-            return redirect('logout')
-
-    def post(self, request):
-        user=request.user
-        if user.is_authenticated:
-            try:
-                s= Staff.objects.get(user=user)
-                if s.stype == "1":
-                    ###Common code for operations
-                    form =StaffCreationForm(request.POST)
-                    if form.is_valid():
-                        user = form.save()
-                        name = request.POST.get('name')
-                        mobile = request.POST.get('mobile')
-                        city = request.POST.get('city')
-                        stype=1
-                        s = Staff(user=user, name=name,mobile=mobile, city=city, stype=stype)
-                        s.save()
-                        return HttpResponse("Done")
-                    return HttpResponse("Failed")
-                    ###Common code for operations
-                else:
-                    return redirect('home')
-            except:
-                return redirect('home')
-        else:
-            return redirect('logout')
-
 class QueryList(View):
     def get(self, request):
         user=request.user
@@ -1165,8 +1120,7 @@ class DeactivateStudent(View):
                     u =t.user
                     u.is_active = False
                     u.save()
-                    current_url = reverse(self.request.get_full_path).url_name
-                    return HttpResponseRedirect(current_url)
+                    return redirect(request.META['HTTP_REFERER'])
                     ###Common code for operations
                 else:
                     return redirect('home')
@@ -1189,8 +1143,7 @@ class ActivateStudent(View):
                     u =t.user
                     u.is_active = True
                     u.save()
-                    current_url = reverse(self.request.get_full_path).url_name
-                    return HttpResponseRedirect(current_url)
+                    return redirect(request.META['HTTP_REFERER'])
                     ###Common code for operations
                 else:
                     return redirect('home')
@@ -1966,6 +1919,67 @@ class TrainerRegisterView(View):
                 return redirect('home')
         else:
             return redirect('logout')
+
+
+class RegisterNewStaff(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="4":
+                    form = NewStaffRegisterForm()
+                    return render(request,'accounts/staff_creation_form.html',{'form':form,'s':s,'no_count':no_count,'note':note})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+    def post(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="4":
+                    form = NewStaffRegisterForm(request.POST)
+                    name=form.cleaned_data['name']
+                    email=form.cleaned_data['email']
+                    mobile=form.cleaned_data['mobile']
+                    nuser = User.objects.create_user(email,email,mobile)
+                    nuser.first_name = name
+                    try:
+                        user.save()
+                        f = form.save(commit=False)
+                        f.user = nuser
+                        f.save()
+                        send_mail(
+                            '[TEQSTORIES] Account Created',
+                            'Hello team, Your staff account has been created successfully.Please login to http://127.0.0.1/ with your email as username and mobile number as password.',
+                            'anandubs1409@gmail.com',
+                            [email],
+                            fail_silently=False,
+                        )
+                        msg="Staff account created successfully and mails have been sent."
+                        return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+                    except:
+                        msg="Learner account creation failed."
+                        return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+                
+
 
 
 

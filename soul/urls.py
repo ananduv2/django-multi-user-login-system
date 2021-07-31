@@ -91,7 +91,6 @@ urlpatterns = [
     path('upcoming_batch_register/', AllUpcomingBatchView.as_view(),name='upcoming_batch_register'),
     path('all_trainer_list/',TrainerList.as_view(),name='all_trainer_list'),
     path('trainer_profile/<id>/',TrainerProfileView.as_view(),name='trainer_profile'),
-    path('operations_registration/', OperationsRegistrationView.as_view(),name='operations_registration'),
     path('query_list/', QueryList.as_view(),name='query_list'),
     path('reply_query/<id>/', ReplyQuery.as_view(),name='reply_query'),
     path('deactivate/staff/<id>/', DeactivateStaff.as_view(),name='deactivate_staff'),
@@ -110,6 +109,7 @@ urlpatterns = [
     path('main/operations_register/',OperationsRegisterView.as_view(),name='operations_register'),
     path('main/sales_register/',SalesRegisterView.as_view(),name='sales_register'),
     path('main/trainer_register/',TrainerRegisterView.as_view(),name='trainer_register'),
+    path('main/staff_registration/',RegisterNewStaff.as_view(),name='staff_registration'),
 
 
 

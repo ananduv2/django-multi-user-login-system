@@ -105,8 +105,9 @@ urlpatterns = [
 
 
 
-    #students
+    #admin
     path('main/home/',AdminDashboardView.as_view(),name='admin_view'),
+    path('main/operations_register/',OperationsRegisterView.as_view(),name='operations_register'),
 
 
 

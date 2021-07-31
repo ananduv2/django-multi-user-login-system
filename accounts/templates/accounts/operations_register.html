@@ -1,0 +1,99 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'accounts/navbar.html' %}
+
+    {% include 'accounts/sidebar_admin.html' %}
+
+
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+                    <div class="page-header">
+                        <div class="row">
+                            <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                                <h5 class="text-uppercase">Operations Department</h5>
+                            </div>
+                            <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                                <ul class="list-inline breadcrumb float-right">
+                                    <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                                    <li class="list-inline-item">Staff</li>
+                                    <li class="list-inline-item">Operations Register</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-3">
+                        </div>
+                    </div>
+
+                    <div class="content-page">
+                        <form method="get">
+                            {% csrf_token %}
+                        <div class="content-page">
+                            <div class="row filter-row">
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="form-group custom-mt-form-group">
+                                    {{f.form.name}}
+                                    <label class="control-label">Name</label><i class="bar"></i>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <div class="form-group custom-mt-form-group">
+                                    {{f.form.mobile}}
+                                    <label class="control-label">Mobile</label><i class="bar"></i>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <div class="form-group custom-mt-form-group">
+                                    {{f.form.email}}
+                                    <label class="control-label">Email</label><i class="bar"></i>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-1">
+                                    <button type="submit" class="btn btn-success btn-block mt-4 mb-2"  style="height: 30px;width:50px;border-radius: 50px 50px 50px 50px"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                </div>
+                                <div class="col-sm-6 col-md-1">
+                                    <a type="reset" href="{% url 'task' %}" class="btn btn-info btn-block mt-4 mb-2"  style="height: 30px;width:50px;border-radius: 50px 50px 50px 50px"><i class="fas fa-sync" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row staff-grid-row">
+                            {% for i in staff %}
+                            <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
+                                <div class="profile-widget">
+                                    <div class="profile-img">
+                                        <a href="{% url 'trainer_profile' i.id %}" class="avatar text-white">{{i.name|first}}</a>
+                                    </div>
+                                    <div class="dropdown profile-action">
+                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                            aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="{% url 'activate_staff' i.id %}"><i
+                                                    class="far fa-check-circle m-r-5"></i>Activate</a>
+                                            <a class="dropdown-item" href="{% url 'deactivate_staff' i.id %}"><i
+                                                    class="fas fa-ban m-r-5"></i> Deactivate</a>
+                                        </div>
+                                    </div>
+                                    {% if i.user.is_active %}
+                                    <h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="{% url 'trainer_profile' i.id %}">{{i.name|title}}</a></h4>
+                                    {% else %}
+                                    <h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="{% url 'trainer_profile' i.id %}"  style="color:red">{{i.name|title}}</a></h4>
+                                    {% endif %}
+                                    <div class="small text-muted">{{i.user}}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

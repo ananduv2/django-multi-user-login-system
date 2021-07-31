@@ -21,8 +21,12 @@ from .filters import *
 
 class LoginView(View):
     def get(self, request):
-        msg=""
-        return render(request,'accounts/login.html',{'msg':msg})
+        user = request.user
+        if user.is_authenticated:
+            return redirect('home')
+        else:
+            msg=""
+            return render(request,'accounts/login.html',{'msg':msg})
 
     def post(self, request):
         username = request.POST['username']
@@ -1107,7 +1111,7 @@ class DeactivateStaff(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
+                if s.stype == "1"or s.stype == "4":
                     ###Common code for operations
                     t =Staff.objects.get(id=id)
                     t.status="Inactive"
@@ -1115,7 +1119,7 @@ class DeactivateStaff(View):
                     u =t.user
                     u.is_active = False
                     u.save()
-                    return redirect('all_trainer_list')
+                    return redirect(request.META['HTTP_REFERER'])
                     ###Common code for operations
                 else:
                     return redirect('home')
@@ -1130,7 +1134,7 @@ class ActivateStaff(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
+                if s.stype == "1" or s.stype == "4":
                     ###Common code for operations
                     t =Staff.objects.get(id=id)
                     t.status="Active"
@@ -1138,7 +1142,7 @@ class ActivateStaff(View):
                     u =t.user
                     u.is_active = True
                     u.save()
-                    return redirect('all_trainer_list')
+                    return redirect(request.META['HTTP_REFERER'])
                     ###Common code for operations
                 else:
                     return redirect('home')
@@ -1153,7 +1157,7 @@ class DeactivateStudent(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1":
+                if s.stype == "1" :
                     ###Common code for operations
                     t =Student.objects.get(id=id)
                     t.status="Inactive"
@@ -1899,4 +1903,26 @@ class AdminDashboardView(View):
                 return redirect('home')
         else:
             return redirect('logout')
+
+
+class OperationsRegisterView(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype =="4":
+                    staff = Staff.objects.filter(stype="1")
+                    f=StaffFilter(self.request.GET,queryset=staff)
+                    staff=f.qs
+                    return render(request,'accounts/operations_register.html',{'staff':staff,'no_count':no_count,'note':note,'s':s,'f':f})
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
 

@@ -27,3 +27,13 @@ class LeadFilter(django_filters.FilterSet):
         fields = '__all__'
         exclude =['created_on']
 
+class StaffFilter(django_filters.FilterSet):
+    name = CharFilter(field_name='name',lookup_expr='icontains')
+    mobile = CharFilter(field_name='mobile',lookup_expr='icontains')
+    email = CharFilter(field_name='email',lookup_expr='icontains')
+    class Meta:
+        model = Staff
+        fields = ['name','email','mobile']
+        
+    
+

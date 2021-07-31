@@ -233,12 +233,10 @@ class AddStudentCourseData(View):
                 s= Staff.objects.get(user=user)
                 student = Student.objects.get(id=id)
                 form = AddStudentCourseDataForm(request.POST)
-                print("Hello testing")
                 if form.is_valid():
                     f =form.save(commit=False)
                     f.student = student
                     f.save()
-                    print("Hello testing 2")
                     re = student.user
                     n = Notification(sender=user,receiver=re,content="Batch update",subject="Added to a new batch")
                     n.save()
@@ -1694,8 +1692,14 @@ class VideoList(View):
                 no_count = note.count()
                 ###Common code for students
                 batch = Batch.objects.get(id=id)
-                batch_data = BatchData.objects.filter(batch=batch)
-                return render(request,'students/video_list.html',{'batch_data':batch_data,'batch':batch,'no_count':no_count,'note':note})
+                scd = StudentCourseData.objects.filter(student=s).filter(batch=batch)
+                print(scd)
+                if scd:
+                    batch_data = BatchData.objects.filter(batch=batch)
+                    return render(request,'students/video_list.html',{'batch_data':batch_data,'batch':batch,'no_count':no_count,'note':note})
+                else:
+                    msg = "You are not authorized to access this play list"
+                    return render(request,'student/msg.html',{'msg':msg,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
                 return redirect('home')
@@ -1888,6 +1892,30 @@ class ViewDReply(View):
             except:
                 return redirect('home')
         return redirect('logout')
+
+class ListAssignments(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                scd = StudentCourseData.objects.filter(student=s)
+                print(scd)
+                batch = []
+                for i in scd:
+                    batch.append(i.batch)
+                print(batch)
+                assi = Assignment.objects.filter(batch__in=batch).order_by('-datecreated')
+                print(assi)
+                return render(request,'students/assignment_list.html',{'assi':assi,'s':s,'no_count':no_count,'note':note})
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
 
 
 

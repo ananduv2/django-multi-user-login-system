@@ -125,7 +125,7 @@ class Assignment(models.Model):
     topic = models.CharField(max_length=100,null=True, blank=True)
     description = models.TextField(max_length=100,null=True, blank=True)
     link = models.CharField(max_length=1000,null=True, blank=True)
-    datecreated = models.DateField(null=True,blank=True,auto_now_add=True)
+    datecreated = models.DateTimeField(null=True,blank=True,auto_now_add=True)
 
     def __str__(self):
         return "%s %s" %(self.batch , self.topic)

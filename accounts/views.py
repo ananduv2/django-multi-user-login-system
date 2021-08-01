@@ -1551,7 +1551,6 @@ class AddAssignment(View):
                 if s.stype == "3":
                     ###Common code for trainers
                     form = AddAssignmentForm()
-                    print(form)
                     return render(request,'accounts/add_assignment.html',{'form':form,'s':s,'no_count':no_count,'note':note})
                 else:
                     return redirect('home')
@@ -1633,7 +1632,6 @@ class StudentDashboard(View):
             try:
                 s = Student.objects.get(user=user)
                 ###Common code for students
-                print(s)
                 scd = StudentCourseData.objects.filter(student=s).filter(~Q(batch__status="Yet to start"))
                 scd_count = scd.count()
                 c = Courses.objects.all()
@@ -1693,7 +1691,6 @@ class VideoList(View):
                 ###Common code for students
                 batch = Batch.objects.get(id=id)
                 scd = StudentCourseData.objects.filter(student=s).filter(batch=batch)
-                print(scd)
                 if scd:
                     batch_data = BatchData.objects.filter(batch=batch)
                     return render(request,'students/video_list.html',{'batch_data':batch_data,'batch':batch,'no_count':no_count,'note':note})
@@ -1903,18 +1900,79 @@ class ListAssignments(View):
                 no_count = note.count()
                 ###Common code for students
                 scd = StudentCourseData.objects.filter(student=s)
-                print(scd)
                 batch = []
                 for i in scd:
                     batch.append(i.batch)
-                print(batch)
                 assi = Assignment.objects.filter(batch__in=batch).order_by('-datecreated')
-                print(assi)
                 return render(request,'students/assignment_list.html',{'assi':assi,'s':s,'no_count':no_count,'note':note})
             except:
                 return redirect('home')
         else:
             return redirect('logout')
+
+class ViewAssignment(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                assi = Assignment.objects.get(id=id)
+                print(assi)
+                sad = StudentAssignmentData.objects.filter(student=s).filter(assignment=assi)
+                print(sad)
+                if sad:
+                    b = "Y"
+                else:
+                    b = "N"
+                print(b)
+                return render(request,'students/assignment_details.html',{'assi':assi,'no_count':no_count,'note':note,'s':s,'b':b})
+                ###Common code for students
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class SubmitAssignment(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                assi = Assignment.objects.get(id=id)
+                print(assi)
+                return render(request,'students/submit_assignment.html',{'assi':assi,'no_count':no_count,'note':note})
+                ###Common code for students
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                assi = Assignment.objects.get(id=id)
+                link = request.POST['link']
+                sad = StudentAssignmentData(student=s,assignment=assi,link=link)
+                sad.save()
+                return redirect('assignment_list')
+                ###Common code for students
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
 
 
 

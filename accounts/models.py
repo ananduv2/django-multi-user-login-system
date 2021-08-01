@@ -213,9 +213,9 @@ class Student(models.Model):
     payment = models.CharField(max_length=10,choices=(('Full','Full'),('Half','Half')),default='Half',blank=True)
     status = models.CharField(max_length=20,choices=(('Active','Active'),('Inactive','Inactive')),default='Active',blank=True)
     profile_pic = models.ImageField(null=True,default="student.jpg")
-    total_fees = models.IntegerField(max_length=100,null=True,blank=True)
-    fees_paid = models.IntegerField(max_length=100,null=True,blank=True)
-    balance = models.IntegerField(max_length=100,null=True,blank=True)
+    total_fees = models.IntegerField(null=True,blank=True)
+    fees_paid = models.IntegerField(null=True,blank=True)
+    balance = models.IntegerField(null=True,blank=True)
 
     def __str__(self):
         return self.name
@@ -230,6 +230,16 @@ class StudentCourseData(models.Model):
     def __str__(self):
         s=" 's "
         return "%s %s %s" % (self.student,s, self.batch)
+
+class StudentAssignmentData(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='candidate',null=True,blank=True)
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE,null=True,blank=True,related_name='assi')
+    link = models.CharField(max_length=1000,null=True, blank=True)
+    submitted_on = models.DateTimeField(auto_now=True,null=True, blank=True)
+
+    def __str__(self):
+        s=" 's "
+        return "%s %s %s" % (self.student,s, self.assignment)
 
 
 class Query(models.Model):

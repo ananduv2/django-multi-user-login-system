@@ -22,7 +22,8 @@
                             <ul class="list-inline breadcrumb float-right">
                                 <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
                                 <li class="list-inline-item"><a href="">Assignment</a></li>
-                                <li class="list-inline-item">Assignment List</li>
+                                <li class="list-inline-item"><a href="{% url 'assignments_listed' %}">Assignment List</a></li>
+                                <li class="list-inline-item">Assignment Submissions</li>
                             </ul>
                         </div>
                     </div>
@@ -30,7 +31,7 @@
                 <div class="content-page">
                     <div class="row">
                         <div class="col-sm-8 col-5">
-                            <h4 class="page-title">Assignment List</h4>
+                            <h4 class="page-title">Assignment Submissions</h4>
                         </div>
                         <!-- <div class="col-sm-4 col-7 text-right m-b-30">
                             <a href="#" class="btn btn-primary btn-rounded float-right" data-toggle="modal"
@@ -45,37 +46,31 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Subject - Batch</th>
-                                            <th>Title</th>
-                                            <th>Description</th>
-                                            <th>Created on</th>
+                                            <th>Student</th>
+                                            <th>Link</th>
+                                            <th>Timestamp</th>
                                             <th class="text-right">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for i in assi %}
+                                        {% for i in sad %}
                                         <tr>
                                             <td>
                                                 {{forloop.counter}}
                                             </td>
                                             <td>
-                                                <h2><a href="" class="avatar text-white"><img src="{{i.batch.subject.pic.url}}" width="40" height="40" alt="{{student.name}}"></a></h2>
-                                                <h2>{{i.batch}}<span></span></h2>
+                                                <h2><a href="" class="avatar text-white"><img src="{{i.student.profile_pic.url}}" width="40" height="40" alt="{{i.student}}"></a></h2>
+                                                <h2>{{i.student}}<span></span></h2>
                                             </td>
-                                            <td>{{i.topic}}</td>
-                                            <td>{{i.description}}</td>
-                                            <td>{{i.datecreated}}</td>
+                                            <td>{{i.link}}</td>
+                                            <td>{{i.submitted_on}}</td>
                                             <td class="text-right">
-                                                <div class="dropdown dropdown-action">
-                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
-                                                        aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="{% url 'submissions' i.id %}">
-                                                            <i class="fa fa-eye m-r-5"></i> View Submissions</a>
-                                                        
-                                                    </div>
-                                                </div>
+                                                <a href="{{i.link}}" class="btn btn-success" style="border-radius: 80px 80px 80px 80px ;color: white" >Open in a new tab</a>
                                             </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="6">No Submissions</td>
                                         </tr>
                                         {% endfor %}
                                         

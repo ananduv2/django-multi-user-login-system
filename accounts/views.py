@@ -1624,6 +1624,29 @@ class ViewAssignments(View):
         else:
             return redirect('logout')
 
+class ViewSubmissions(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    assi = Assignment.objects.get(id=id)
+                    sad = StudentAssignmentData.objects.filter(assignment=assi)
+                    return render(request,'accounts/submissions.html',{'assi':assi,'no_count':no_count,'note':note,'s':s,'sad':sad})
+                    ###Common code for trainers                
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+
 
 
 

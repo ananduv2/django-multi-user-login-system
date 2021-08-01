@@ -60,6 +60,7 @@ urlpatterns = [
     path('trainer/batch_content/<id>', BatchContent.as_view(),name='batch_content'),
     path('trainer/batch_content_list/<id>', BatchContentList.as_view(),name='batch_content_list'),
     path('trainer/add_assignment/', AddAssignment.as_view(),name='add_assignment'),
+    path('trainer/assignment_list/',ViewAssignments.as_view(),name='assignments_listed'),
     
 
 

@@ -1603,6 +1603,26 @@ class AddAssignment(View):
 
 
 
+class ViewAssignments(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    batch = Batch.objects.filter(trainer=s).filter(status="Ongoing")
+                    assi = Assignment.objects.filter(batch__in=batch).order_by('-datecreated')
+                    return render(request,'accounts/assignment_list.html',{'assi':assi,'no_count':no_count,'note':note,'s':s})
+                    ###Common code for trainers                
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
 
 
 

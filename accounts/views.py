@@ -861,12 +861,24 @@ class EditBatchView(View):
                             re = User.objects.get(username=tr.user)
                             n = Notification(sender=user,receiver=re,content="Batch updated",subject=b)
                             n.save()
-                            
-                        if s.stype == "1":
-                            if st =="Ongoing":
-                                return redirect('active_batch_register')
-                            else :
-                                return redirect('batch_register')
+                        if st == "Completed":
+                            p = Project(batch=b)
+                            p.save()
+                        name = []
+                        scd = StudentCourseData.objects.filter(batch=b)
+                        for i in scd:
+                            name.append(i.student)
+                        stu = Student.objects.filter(name__in=name)
+                        for i in stu:
+                            re = i.user
+                            n = Notification(sender=user,receiver=re,content="Batch ended and projects released for ",subject=b)
+                            n.save()
+        
+                        if st =="Ongoing":
+                            return redirect('active_batch_register')
+                        else :
+                            return redirect('batch_register')
+
                     else:
                         msg="Please review your edit."
                         return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
@@ -875,6 +887,19 @@ class EditBatchView(View):
                     update = UpdateBatchForm(request.POST,instance=b)
                     if update.is_valid():
                         update.save()
+                        st=update.cleaned_data['status']
+                        if st == "Completed":
+                            p = Project(batch=b)
+                            p.save()
+                        name = []
+                        scd = StudentCourseData.objects.filter(batch=b)
+                        for i in scd:
+                            name.append(i.student)
+                        stu = Student.objects.filter(name__in=name)
+                        for i in stu:
+                            re = i.user
+                            n = Notification(sender=user,receiver=re,content="Batch ended and projects released for ",subject=b)
+                            n.save()
                         return redirect('home')
                     else:
                         msg="Please review your edit."

@@ -120,6 +120,16 @@ class BatchData(models.Model):
     def __str__(self):
         return "%s %s" %(self.batch , self.topic)
 
+
+class Project(models.Model):
+    batch = models.ForeignKey(Batch,on_delete=models.CASCADE,null=True,blank=True)
+    status = models.CharField(max_length=20,choices=(('Active','Active'),('Inactive','Inactive')),default='Active',blank=True,null=True)
+
+    def __str__(self):
+        return "%s" %(self.batch)
+
+
+
 class Assignment(models.Model):
     batch = models.ForeignKey(Batch,on_delete=models.CASCADE,null=True,blank=True,limit_choices_to={'status':"Ongoing"})
     topic = models.CharField(max_length=100,null=True, blank=True)
@@ -240,6 +250,21 @@ class StudentAssignmentData(models.Model):
     def __str__(self):
         s=" 's "
         return "%s %s %s" % (self.student,s, self.assignment)
+
+class StudentProjectData(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='learner',null=True,blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='project',blank=True,null=True)
+    link = models.CharField(max_length=1000,null=True, blank=True)
+    submitted_on = models.DateTimeField(auto_now=True,null=True, blank=True)
+    verified_on = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=20,choices=(('Waiting for approval','Waiting for approval'),('Approved','Approved'),('Rejected','Rejected')),default="Waiting for approval",null=True)
+    certificate = models.FileField(upload_to ='certiicates/',null=True, blank=True,default=None)
+
+    def __str__(self):
+        s="-submitted on :"
+        return "%s %s %s" % (self.student,s, self.submitted_on)
+
+
 
 
 class Query(models.Model):

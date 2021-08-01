@@ -67,7 +67,7 @@ class Staff(models.Model):
     state = models.CharField(max_length=100,null=True,choices=state, blank=True)
     stype = models.CharField(max_length=100,null=True,choices=value, blank=True)
     status = models.CharField(max_length=20,choices=(('Active','Active'),('Inactive','Inactive')),default='Active')
-    profile_pic = models.ImageField(null=True, blank=True,default="student.jpg")
+    profile_pic = models.ImageField(null=True, blank=True,default="user-circle-solid.jpg")
 
     def __str__(self):
         return self.name

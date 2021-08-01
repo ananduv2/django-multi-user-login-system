@@ -12,6 +12,11 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 
 
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+
+
 
 from .models import *
 from .forms import *
@@ -1682,7 +1687,7 @@ class ViewProjectSubmissions(View):
                     ###Common code for trainers
                     batch = Batch.objects.filter(trainer=s).filter(status="Completed")
                     project = Project.objects.filter(batch__in=batch)
-                    spd =StudentProjectData.objects.filter(project__in=project)
+                    spd =StudentProjectData.objects.filter(project__in=project).filter(status="Waiting for approval")
                     print(spd)
                     form = ProjectApproval()
                     return render(request,'accounts/project_submissions.html',{'s':s,'no_count':no_count,'note':note,'spd':spd,'form':form})
@@ -1693,6 +1698,59 @@ class ViewProjectSubmissions(View):
                 return redirect('home')
         else:
             return redirect('logout')
+
+class UpdateSPD(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    spd = StudentProjectData.objects.get(id=id)
+                    form = ProjectApproval(instance=spd)
+                    return render(request,'accounts/edit_spd.html',{'form':form,'s':s,'no_count':no_count,'note':note,'spd':spd})
+                    ###Common code for trainers                
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+            no_count = note.count()
+            try:
+                s= Staff.objects.get(user=user)
+                if s.stype == "3":
+                    ###Common code for trainers
+                    spd = StudentProjectData.objects.get(id=id)
+                    form = ProjectApproval(request.POST,instance=spd)
+                    if form.is_valid():
+                        f = form.save(commit=False)
+                        f.verified_on = datetime.datetime.now()
+                        f.save()
+                        re = spd.student.user
+                        n = Notification(sender=user,receiver=re,content="Project approved ",subject=spd.project)
+                        n.save()
+                    return redirect('project_submissions')
+                    ###Common code for trainers                
+                else:
+                    return redirect('home')
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+
+
+
 
 
 

@@ -62,10 +62,10 @@
                                                 <h2><a href="" class="avatar text-white"><img src="{{i.student.profile_pic.url}}" width="40" height="40" alt="{{i.student}}"></a></h2>
                                                 <h2>{{i.student}}<span></span></h2>
                                             </td>
-                                            <td>{{i.link}}</td>
+                                            <td>{{i.link|slice:":40"}}...</td>
                                             <td>{{i.submitted_on}}</td>
                                             <td class="text-right">
-                                                <a href="{{i.link}}" class="btn btn-success" style="border-radius: 80px 80px 80px 80px ;color: white" >Open in a new tab</a>
+                                                <a href="{{i.link}}" target="_blank" class="btn btn-success" style="border-radius: 80px 80px 80px 80px ;color: white" >Open in a new tab</a>
                                             </td>
                                         </tr>
                                         {% empty %}

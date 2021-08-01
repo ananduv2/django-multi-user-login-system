@@ -136,6 +136,7 @@ urlpatterns = [
     path('student/assignments/',ListAssignments.as_view(),name='assignment_list'),
     path('student/assignment/<id>/',ViewAssignment.as_view(),name='assignment'),
     path('student/assignment/submit/<id>/',SubmitAssignment.as_view(),name='submit_assignment'),
+    path('student/available_projects/',ListProjects.as_view(),name='list_projects'),
 ]
 
 

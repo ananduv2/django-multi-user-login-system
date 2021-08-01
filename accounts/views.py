@@ -2040,6 +2040,28 @@ class SubmitAssignment(View):
         else:
             return redirect('logout')
 
+class ListProjects(View):
+    def get(self, request):    
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                scd = StudentCourseData.objects.filter(student=s)
+                batch = []
+                for i in scd:
+                    batch.append(i.batch)
+                projects = Project.objects.filter(batch__in = batch)
+                return render(request,'students/available_projects.html',{'s':s,'no_count':no_count,'note':note,'projects':projects})
+                ###Common code for students
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
 
 
 

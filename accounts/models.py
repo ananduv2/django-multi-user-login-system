@@ -82,6 +82,7 @@ class Courses(models.Model):
     name = models.CharField(max_length=300,null=True)
     fee = models.CharField(max_length=6)
     link = models.CharField(max_length=1000,null=True, blank=True)
+    project_file = models.CharField(max_length=1000,null=True,blank=True)
     pic = models.ImageField(null=True, blank=True)
 
     def __str__(self):
@@ -255,9 +256,9 @@ class StudentProjectData(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='learner',null=True,blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='project',blank=True,null=True)
     link = models.CharField(max_length=1000,null=True, blank=True)
-    submitted_on = models.DateTimeField(auto_now=True,null=True, blank=True)
+    submitted_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     verified_on = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=20,choices=(('Waiting for approval','Waiting for approval'),('Approved','Approved'),('Rejected','Rejected')),default="Waiting for approval",null=True)
+    status = models.CharField(max_length=20,choices=(('Waiting for approval','Waiting for approval'),('Approved','Approved'),('Rejected','Rejected')),default="Waiting for approval",null=True,blank=True)
     certificate = models.FileField(upload_to ='certiicates/',null=True, blank=True,default=None)
 
     def __str__(self):

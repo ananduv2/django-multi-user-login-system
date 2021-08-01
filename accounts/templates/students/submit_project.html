@@ -1,0 +1,62 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'students/navbar.html' %}
+
+    {% include 'students/sidebar.html' %}
+
+
+
+
+
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                        <h5 class="text-uppercase">Batch Content</h5> 
+                    </div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                        <ul class="list-inline breadcrumb float-right">
+                        <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                        <li class="list-inline-item"><a href="{% url 'list_projects' %}">Project List</a></li>
+                        <li class="list-inline-item">Submit Project</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                <div class="card-box">
+                    <h4 class="card-title">Submit Project</h4>
+                    <br>
+                    <form method="post" action>
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Batch</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" value="{{project.batch}}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">Link</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="link" placeholder="Enter the url to your project">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit"class="btn btn-primary">Submit Project</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

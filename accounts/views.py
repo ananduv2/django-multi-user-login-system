@@ -2061,6 +2061,58 @@ class ListProjects(View):
         else:
             return redirect('logout')
 
+class SubmitProject(View):
+    def get(self, request,id):    
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                project = Project.objects.get(id=id)
+                spd = StudentProjectData.objects.filter(student=s).filter(project=project)
+                if spd:
+                    msg="You have already uploaded once.Please contact tech team if this is an error."
+                    return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
+                else:
+                    return render(request,'students/submit_project.html',{'project':project,'no_count':no_count,'note':note})
+                ###Common code for students
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+    def post(self, request,id):    
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                project = Project.objects.get(id=id)
+                link = request.POST['link']
+                try:
+                    spd = StudentProjectData(student=s,project=project,link=link)
+                    print(spd)
+                    spd.save()
+                    msg="Project uploaded successfully.You will be notified when your project is approved and certificate is generated."
+                    return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
+                except:
+                    msg="Failed to upload project. Try again or report it as Issue."
+                    return render(request,'students/msg.html',{'msg':msg,'no_count':no_count,'note':note})
+                ###Common code for students
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+            
+
+
+
+
+
 
 
 

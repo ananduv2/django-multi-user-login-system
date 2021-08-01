@@ -62,6 +62,7 @@ urlpatterns = [
     path('trainer/add_assignment/', AddAssignment.as_view(),name='add_assignment'),
     path('trainer/assignment_list/',ViewAssignments.as_view(),name='assignments_listed'),
     path('trainer/assignment/submission/<id>/',ViewSubmissions.as_view(),name='submissions'),
+    path('trainer/project/submissions/',ViewProjectSubmissions.as_view(),name='project_submissions'),
     
 
 

@@ -99,6 +99,12 @@ class AddAssignmentForm(ModelForm):
         fields = '__all__'
         exclude = ['link','datecreated']
 
+class ProjectApproval(ModelForm):
+    class Meta:
+        model = StudentProjectData
+        fields = ['status']
+
+
 
 
 

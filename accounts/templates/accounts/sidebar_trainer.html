@@ -41,8 +41,13 @@
                 <li>
                     <a href="{% url 'view_queries' %}"><i class="fas fa-question-circle" aria-hidden="true"></i>Student Queries</a>
                 </li>
-                <li>
-                    <a href="{% url 'add_assignment' %}"><i class="fas fa-table" aria-hidden="true"></i>Add Assignment</a>
+                <li class="submenu">
+                    <a href="#"><i class="fas fa-table" aria-hidden="true"></i> <span> Assignments</span> <span
+                            class="menu-arrow"></span></a>
+                    <ul class="list-unstyled" style="display: none;">
+                        <li><a href="{% url 'add_assignment' %}">Add Assignment</a></li>
+                        <li><a href="{% url 'student_register' %}">View Submissions</a></li>
+                    </ul>
                 </li>
                 
                         

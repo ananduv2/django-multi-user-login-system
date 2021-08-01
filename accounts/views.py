@@ -258,6 +258,22 @@ class AddStudentCourseData(View):
 
 
 
+def generate():
+    img = Image.open("Certificate.jpg")
+    draw = ImageDraw.Draw(img)
+    selectFont = ImageFont.truetype("arialbd.ttf", size = 150)
+    courseFont = ImageFont.truetype("arialbd.ttf", size = 100)
+    codeFont = ImageFont.truetype("arialbd.ttf", size = 80)
+    draw.text( (1750,980), "Anandu BS", (1,91,153),anchor="ma",font=selectFont,align ="center")
+    draw.text( (1750,1430), "AWS Solution Architect Training", (1,1,1),anchor="ma",font=courseFont,align ="center")
+    draw.text( (746,1960), "TS2145978", (1,1,1),anchor="ma",font=codeFont,align ="center")
+    draw.text( (1786,1960), "31/07/2021", (1,1,1),anchor="ma",font=codeFont,align ="center")
+    img.save( 'certi.pdf', "PDF", resolution=100.0)
+
+
+
+
+
 
 
 
@@ -1738,6 +1754,7 @@ class UpdateSPD(View):
                         re = spd.student.user
                         n = Notification(sender=user,receiver=re,content="Project approved ",subject=spd.project)
                         n.save()
+                        generate()
                     return redirect('project_submissions')
                     ###Common code for trainers                
                 else:
@@ -2192,6 +2209,9 @@ class SubmitProject(View):
                 return redirect('home')
         else:
             return redirect('logout')
+
+
+
             
 
 

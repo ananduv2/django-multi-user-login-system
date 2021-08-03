@@ -10,6 +10,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from datetime import date
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+import time
+from django.http import FileResponse
 
 
 from PIL import Image
@@ -112,7 +114,10 @@ class HomeView(View):
                 else:
                     return redirect('logout')
             except:
-                return redirect('student_dashboard')
+                try:
+                    return redirect('student_dashboard')
+                except:
+                    return redirect('logout')
         else:
             return redirect('logout')
 
@@ -1750,12 +1755,35 @@ class UpdateSPD(View):
                     if form.is_valid():
                         f = form.save(commit=False)
                         f.verified_on = datetime.datetime.now()
+                        if form.cleaned_data['status']=="Approved":
+                            epoch = time.time()
+                            spd_id = "TS" # this could be incremental or even a uuid
+                            f.certificate_id = "%s_%d" % (spd_id, epoch)
+                            template = CertificateTemplate.objects.get(name="sample")
+                            c_id = str(f.certificate_id)
+                            date = str(datetime.datetime.now().date())
+    ############################################################################################################################
+                            img = Image.open(template.certificate)
+                            draw = ImageDraw.Draw(img)
+                            file_name = str("certificates/"+f.certificate_id+".pdf")
+                            selectFont = ImageFont.truetype("arialbd.ttf", size = 150)
+                            courseFont = ImageFont.truetype("arialbd.ttf", size = 100)
+                            codeFont = ImageFont.truetype("arialbd.ttf", size = 80)
+                            draw.text( (1750,980), spd.student.name, (1,91,153),anchor="ma",font=selectFont,align ="center")
+                            draw.text( (1750,1430), spd.project.batch.subject.name, (1,1,1),anchor="ma",font=courseFont,align ="center")
+                            draw.text( (746,1960),c_id, (1,1,1),anchor="ma",font=codeFont,align ="center")
+                            draw.text( (1786,1960), date, (1,1,1),anchor="ma",font=codeFont,align ="center")
+                            img.save( file_name, "PDF", resolution=70.0)
+###########################################################################################################################
                         f.save()
                         re = spd.student.user
                         n = Notification(sender=user,receiver=re,content="Project approved ",subject=spd.project)
                         n.save()
                         generate()
-                    return redirect('project_submissions')
+                        return redirect('project_submissions')
+                    else:
+                        msg="Failed to update the project status."
+                        return render(request,'accounts/okmsg.html',{'msg':msg,'no_count':no_count,'note':note,'s':s})
                     ###Common code for trainers                
                 else:
                     return redirect('home')
@@ -2209,6 +2237,45 @@ class SubmitProject(View):
                 return redirect('home')
         else:
             return redirect('logout')
+
+class GetCertificates(View):
+    def get(self, request):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
+                no_count = note.count()
+                ###Common code for students
+                spd = StudentProjectData.objects.filter(student=s).filter(status="Approved")
+                print(spd)
+                return render(request,'students/certificates.html',{'s':s,'spd':spd,'no_count':no_count,'note':note})
+                ###Common code for students
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+class GetFile(View):
+    def get(self, request,id):
+        user=request.user
+        if user.is_authenticated:
+            try:
+                s = Student.objects.get(user=user)
+                ###Common code for students
+                id = id
+                string = str("certificates/"+id+".pdf")
+                certificate = open(string,'rb')
+                response = FileResponse(certificate)
+                return response
+                ###Common code for students
+            except:
+                return redirect('home')
+        else:
+            return redirect('logout')
+
+
+
 
 
 

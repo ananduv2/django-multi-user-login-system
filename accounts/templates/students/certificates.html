@@ -1,0 +1,81 @@
+{% extends 'accounts/main.html' %}
+
+
+
+    {% block content %}
+
+<div class="main-wrapper">
+    
+    {% include 'students/navbar.html' %}
+
+    {% include 'students/sidebar.html' %}
+    
+
+        <div class="page-wrapper">
+            <div class="content container-fluid">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                            <h5 class="text-uppercase">Course Complete Certificates</h5>
+                        </div>
+                        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                            <ul class="list-inline breadcrumb float-right">
+                                <li class="list-inline-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                                <li class="list-inline-item">Certificates</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-page">
+                    <div class="row">
+                        <div class="col-sm-8 col-5">
+                            <h4 class="page-title">Certificates</h4>
+                        </div>
+                        <!-- <div class="col-sm-4 col-7 text-right m-b-30">
+                            <a href="#" class="btn btn-primary btn-rounded float-right" data-toggle="modal"
+                                data-target="#add_leavetype"><i class="fas fa-plus"></i> Add Leave Type</a>
+                        </div> -->
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Subject - Batch</th>
+                                            <th>Link</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in spd %}
+                                        <tr>
+                                            <td>
+                                                {{forloop.counter}}
+                                            </td>
+                                            <td>
+                                                <h2><a href="" class="avatar text-white"><img src="{{i.project.batch.subject.pic.url}}" width="40" height="40" alt="{{student.name}}"></a></h2>
+                                                <h2>{{i.project.batch}}<span></span></h2>
+                                            </td>
+                                            <td><a href="{% url 'see_certificate' i.certificate_id %}" target="_blank" class="btn btn-info" style="border-radius: 80px 80px 80px 80px ;color: white">Open in new tab <i class="fas fa-external-link-alt"></i></a></td>
+                                        </tr> 
+                                        {% empty %}
+                                        <tr>
+                                            <th colspan="3">No certificates available.</th>
+                                        </tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

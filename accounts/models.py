@@ -2,8 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from django.db.models import Q
+from uuid import uuid4
 
 # Create your models here.
+class CertificateTemplate(models.Model):
+    name = models.CharField(max_length=100,default='sample')
+    certificate = models.FileField(default="Certificate.jpg", blank=True,null=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Staff(models.Model):
     value= (
     ('1', 'Operations'),
@@ -259,7 +268,7 @@ class StudentProjectData(models.Model):
     submitted_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     verified_on = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=20,choices=(('Waiting for approval','Waiting for approval'),('Approved','Approved'),('Rejected','Rejected')),default="Waiting for approval",null=True,blank=True)
-    certificate = models.FileField(upload_to ='certiicates/',null=True, blank=True,default=None)
+    certificate_id = models.CharField(max_length=100,null=True, blank=True)
 
     def __str__(self):
         s="-submitted on :"

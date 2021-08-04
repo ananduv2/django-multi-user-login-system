@@ -44,8 +44,10 @@
                                                 <fieldset style="padding-top:25px">{{s.email}}</fieldset>
                                                 <label class="control-label" style="color:red">Email</label><i class="bar"></i>
                                             </div>
+                                            <br>
                                             <div class="form-group custom-mt-form-group">
-                                                <fieldset style="padding-top:25px">{{form.dob}}</fieldset>
+                                                {% load widget_tweaks %}
+                                                {% render_field form.dob type="date" %}
                                                 <label class="control-label" >Date of Birth</label><i class="bar"></i>
                                             </div>
                                             <div class="form-group custom-mt-form-group">
@@ -56,8 +58,9 @@
                                                 <fieldset style="padding-top:25px">{{s.sex}}</fieldset>
                                                 <label class="control-label" style="color:red">Gender</label><i class="bar"></i>
                                             </div>
+                                            <br>
                                             <div class="form-group custom-mt-form-group">
-                                                <fieldset style="padding-top:25px">{{form.blood_group}}</fieldset>
+                                                {% render_field form.blood_group type="date" %}
                                                 <label class="control-label" >Blood Group</label><i class="bar"></i>
                                             </div>
                                     </div>

@@ -174,7 +174,7 @@ class ProfileUpdate(View):
                 form = StudentProfileUpdateForm(request.POST,instance=s)
                 if form.is_valid():
                     form.save()
-                    return redirect('home')
+                    return redirect('profile_update')
                 else:
                     return redirect('profile_update')
         else:

@@ -2485,7 +2485,18 @@ class AssignTask(View):
                 if s.stype =="4":
                     form = TaskAllocationForm(request.POST)
                     if form.is_valid():
-                        form.save()
+                        t = form.save(commit=False)
+                        t.assigned_by = s
+                        t.save()
+                        r = form.cleaned_data['user']
+                        re = r.user
+                        n = Notification(sender=user,receiver=re,content="Task allocated",subject=t)
+                        n.save()
+                        msg = "Task has been successfully allocated"
+                        return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
+                    else:
+                        msg = "Task allocation failed!."
+                        return render(request,'accounts/okmsg.html',{'s':s,'msg':msg,'no_count':no_count,'note':note})
                 else:
                     return redirect('home')
             except:

@@ -118,6 +118,7 @@ urlpatterns = [
     path('main/sales_register/',SalesRegisterView.as_view(),name='sales_register'),
     path('main/trainer_register/',TrainerRegisterView.as_view(),name='trainer_register'),
     path('main/staff_registration/',RegisterNewStaff.as_view(),name='staff_registration'),
+    path('main/assign_task/',AssignTask.as_view(),name='assign_task'),
 
 
 

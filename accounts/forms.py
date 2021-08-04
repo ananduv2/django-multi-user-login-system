@@ -27,6 +27,7 @@ class TaskAllocationForm(ModelForm):
     class Meta:
         model = Task
         fields ='__all__'
+        exclude = ['assigned_by','status']
 
 class ProfileUpdateForm(ModelForm):
     class Meta:

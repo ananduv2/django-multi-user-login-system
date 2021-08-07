@@ -795,7 +795,7 @@ class AllBatchView(View):
             no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1" or s.stype == "3":
+                if s.stype == "1" or s.stype == "3" or s.stype=="4":
                     ###Common code for operations
                     b=Batch.objects.filter(mode="1")
                     c=Batch.objects.filter(mode="2")
@@ -816,7 +816,7 @@ class AllActiveBatchView(View):
             no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1" or s.stype == "3" :
+                if s.stype == "1" or s.stype == "3" or s.stype=="4":
                     ###Common code for operations
                     b=Batch.objects.filter(status='Ongoing',mode="1")
                     c=Batch.objects.filter(status='Ongoing',mode="2")
@@ -839,7 +839,7 @@ class EditBatchView(View):
             try:
                 s= Staff.objects.get(user=user)
                 b=Batch.objects.get(id=id)
-                if s.stype == "1":
+                if s.stype == "1" or s.stype == "4":
                     ###Common code for operations
                     form = AddBatchForm(instance=b)
                     return render(request,'accounts/batch_updation_form.html',{'s':s,'b':b,'form':form,'no_count':no_count,'note':note})
@@ -862,7 +862,7 @@ class EditBatchView(View):
             try:
                 s= Staff.objects.get(user=user)
                 b=Batch.objects.get(id=id)
-                if s.stype == "1" :
+                if s.stype == "1" or s.stype == "4":
                     ###Common code for operations
                     form = AddBatchForm(request.POST,instance=b)
                     if form.is_valid():
@@ -975,7 +975,7 @@ class AllUpcomingBatchView(View):
         if user.is_authenticated:
             try:
                 s= Staff.objects.get(user=user)
-                if s.stype == "1" or s.stype == "3":
+                if s.stype == "1" or s.stype == "3" or s.stype=="4":
                     note = Notification.objects.filter(receiver=user).filter(status="Not Read").order_by('-datetime')
                     no_count = note.count()
                     ###Common code for operations
@@ -2439,10 +2439,12 @@ class RegisterNewStaff(View):
                     nuser.save()
                     print(nuser)
                     try:
-                        user.save()
                         f = form.save(commit=False)
                         f.user = nuser
                         f.save()
+                        nuser.set_password(mobile)
+                        nuser.save()
+                        print(nuser)
                         send_mail(
                             '[TEQSTORIES] Account Created',
                             'Hello team, Your staff account has been created successfully.Please login to http://127.0.0.1/ with your email as username and mobile number as password.',

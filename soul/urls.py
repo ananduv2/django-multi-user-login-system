@@ -82,7 +82,13 @@ urlpatterns = [
     path('learner/create/<id>/', CreateStudentView.as_view(),name='create_student'),
 
 
-
+    #batch operations
+    path('batch_register/', AllBatchView.as_view(),name='batch_register'),
+    path('active_batch_register/', AllActiveBatchView.as_view(),name='active_batch_register'),
+    path('batch_creation_form/', AddBatchView.as_view(),name='batch_creation_form'),
+    path('batch/edit/<id>/',EditBatchView.as_view(),name='batch_edit'),
+    path('batch/delete/<id>/',DeleteBatch.as_view(),name='batch_delete'),
+    path('upcoming_batch_register/', AllUpcomingBatchView.as_view(),name='upcoming_batch_register'),
 
 
 
@@ -91,12 +97,6 @@ urlpatterns = [
 
     #operations
     path('operations/home/', OperationsDashboard.as_view(),name='operations_dashboard'),
-    path('batch_register/', AllBatchView.as_view(),name='batch_register'),
-    path('active_batch_register/', AllActiveBatchView.as_view(),name='active_batch_register'),
-    path('batch_creation_form/', AddBatchView.as_view(),name='batch_creation_form'),
-    path('batch/edit/<id>/',EditBatchView.as_view(),name='batch_edit'),
-    path('batch/delete/<id>/',DeleteBatch.as_view(),name='batch_delete'),
-    path('upcoming_batch_register/', AllUpcomingBatchView.as_view(),name='upcoming_batch_register'),
     path('all_trainer_list/',TrainerList.as_view(),name='all_trainer_list'),
     path('trainer_profile/<id>/',TrainerProfileView.as_view(),name='trainer_profile'),
     path('query_list/', QueryList.as_view(),name='query_list'),

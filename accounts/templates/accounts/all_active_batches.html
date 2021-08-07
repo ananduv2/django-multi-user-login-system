@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            {% if s.stype == "1" %}
+            {% if s.stype == "1"  %}
             <div class="row">
                 <div class="col-sm-4 col-3"></div>
                 <div class="col-sm-8 col-9 text-right m-b-20">
@@ -100,6 +100,7 @@
                                     <td>{{i.timing}}</td>
                                     <td>{{i.start_date}}</td>
                                     <td>{{i.end_date}}</td>
+                                    {% if s.stype == "1"  or s.stype == "4" %}
                                     <td class="text-right">
                                     <a href="{%url 'batch_edit' i.id %}" class="btn btn-primary btn-sm mb-1">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
@@ -108,6 +109,7 @@
                                         <i class="fas fa-trash" aria-hidden="true"></i>
                                     </a>
                                     </td>
+                                    {% endif %}
                                 </tr>
                                 {% empty %}
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">

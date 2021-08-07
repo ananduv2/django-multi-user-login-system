@@ -2424,13 +2424,20 @@ class RegisterNewStaff(View):
             no_count = note.count()
             try:
                 s= Staff.objects.get(user=user)
+                print(s)
                 if s.stype =="4":
+                    print("Hello 1")
                     form = NewStaffRegisterForm(request.POST)
+                    print(form)
                     name=form.cleaned_data['name']
+                    print(name)
                     email=form.cleaned_data['email']
+                    print(email)
                     mobile=form.cleaned_data['mobile']
-                    nuser = User.objects.create_user(email,email,mobile)
-                    nuser.first_name = name
+                    print(mobile)
+                    nuser = User(username=email,email=email,password=mobile,first_name=name)
+                    nuser.save()
+                    print(nuser)
                     try:
                         user.save()
                         f = form.save(commit=False)

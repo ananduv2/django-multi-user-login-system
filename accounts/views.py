@@ -772,7 +772,7 @@ class AddBatchView(View):
                         n = Notification(sender=user,receiver=re,content="Batch created",subject=b)
                         n.save()
                     b.save()
-                    if status=="1":
+                    if status=="Yet to start":
                         return redirect('upcoming_batch_register')
                     else:
                         return redirect('active_batch_register')
@@ -2005,7 +2005,12 @@ class SendDoubt(View):
                 no_count = note.count()
                 ###Common code for students
                 form = DoubtSendForm()
-                st=Staff.objects.filter(stype="3")
+                scd = StudentCourseData.objects.filter(student=s)
+                trainer_list = []
+                for i in scd:
+                    trainer_list.append(i.batch.trainer)
+                st=Staff.objects.filter(name__in=trainer_list)
+                form.fields['receiver'].queryset = st
                 return render(request,'students/send_doubt.html',{'s':s,'form':form,'st':st,'no_count':no_count,'note':note})
                 ###Common code for students
             except:
@@ -2021,6 +2026,8 @@ class SendDoubt(View):
                 no_count = note.count()
                 ###Common code for students
                 form = DoubtSendForm(request.POST,request.FILES)
+                receiver = request.POST.get('trainer')
+                print(receiver)
                 if form.is_valid():
                     f=form.save(commit=False)
                     f.sender=s

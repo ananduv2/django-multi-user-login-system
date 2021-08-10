@@ -118,7 +118,10 @@ class Batch(models.Model):
     status = models.CharField(max_length=100,choices=status_value,blank=True,default="Yet to start")
 
     def __str__(self):
-        return "%s %s %s %s" %(self.trainer , self.subject , self.start_date , self.timing)
+        st =" started on "
+        at = " at "
+        by = " by "
+        return "%s %s %s %s %s %s %s" %(self.subject ,st, self.start_date ,at, self.timing,by,self.trainer)
 
 
 class BatchData(models.Model):
